@@ -1,0 +1,128 @@
+#intialQuestionBox{
+
+	width: 500px;
+	height: 75px;
+	margin: 0 auto 0 auto;
+	border: solid blue;
+}
+#question{
+	margin-left: 15%;
+}
+#optionsBox{
+	margin-top: 40px;
+	width: 1000px;
+	height: 100px;
+	margin: 0 auto 0 auto;
+	border: solid black;
+
+
+}
+#controllerBox{
+	margin-top: 40px;
+	width: 750px;
+	height: 100px;
+	margin: 0 auto 0 auto;
+	border: solid black;
+}
+.controll{
+
+	height: 50px;
+	margin-top: 30px;
+	margin-left: 100px;
+	background-color: black;
+	color: white;
+}
+
+
+#dimensionsBox{
+	width: 1000px;
+	height: 50px;
+	margin: 0 auto 0 auto;
+	border: solid black;
+}
+.dimensionInput{
+	/*visibility: hidden;*/
+}
+.option{
+
+	height: 60px;
+	margin-top: 30px;
+	margin-left: 30px;
+	margin-right: 30px;
+	background-color: red;
+}
+.button{
+	width: 100px;
+	border-radius: 10px;
+	text-align: center;
+	margin-bottom: 10px;
+	float: left;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.dimensionInput{
+	margin-right: 10px;
+	margin-left: 10px;
+	float: left;
+
+}
+
+#myTable1{
+	margin-top: 40px;
+	border: solid red;
+	width: 100px;
+	height: 100px;
+	margin-right: 50px;
+}
+
+#myTable2{
+	margin-top: 40px;
+	border: solid red;
+	width: 100px;
+	height: 100px;
+	margin-right: 40px;
+}
+
+#myTable3{
+	margin-top: 40px;
+	border: solid red;
+	width: 100px;
+	height: 100px;
+	margin-right: 40px;
+}
+
+#matrixBox{
+	margin-bottom: 50px;
+	border: solid black;
+	height: 250px;
+}
+
+#xBox{
+	font-size: 24px;
+	margin-right: 50px;
+	margin-top: 100px;
+	visibility: hidden;
+}
+
+#equalBox{
+	font-size: 24px;
+	margin-right: 50px;
+	margin-top: 100px;
+	visibility: hidden;
+}
+
+#collumnInput1{
+	margin-right: 50px;
+}
+
+.tableBox{
+	float: left;
+}
+
+td{
+	border: solid black;
+	width: 40%;
+}
+
