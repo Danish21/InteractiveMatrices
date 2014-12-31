@@ -4,6 +4,7 @@
 	
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript" src="fraction.js"></script>
 		<script type="text/javascript" src= "jquery-1.11.1.min.js"></script> 	
 		<script type="text/javascript" src="script.js"></script>
 			
@@ -17,20 +18,20 @@
 		<div id="intialQuestionBox"><h1 id="question">What do you want to do?</h1> </div>
 
 		<div id="optionsBox">
-			
+			<div class ="button option" id="addButton" >Add</div>
+			<div class ="button option" id="subtractButton" >Subtract</div>
 			<div class ="button option" id="multiplyButton" >Multipy</div>
 			<div class ="button option" id="transposeButton" >Transpose</div>
 			<div class ="button option" id="determinant2by2Button" >Find the Determinant 2x2</div>
 			<div class = "button option" id="inverse2by2Button" >  Find the Inverse 2x2 </div>
-			<div class ="button option" id="determinant2by2Button" >Find the Determinan 3x3</div>
-			<div class = "button option" id="inverse2by2Button" >  Find the Inverse 3x3 </div>
+			<div class ="button option" id="determinant3by3Button" >Find the Determinan 3x3</div>
+			<div class = "button option" id="inverse3by3Button" >  Find the Inverse 3x3 </div>
 		</div>
 
 		<div id="controllerBox">
 
-			<div class="button controll" id="createTable" >Create Table</div>
-			<div class = "button controll" id="resetButton" > Reset </div>
-			<div class = "button controll" id="Calculate" > Calculate </div>
+			<div class="button controll" id="updateMatrices" > Resize Matrices</div>
+			<div class = "button controll" id="resetButton"  > Reset </div>
 
 		</div>
 		<div id="dimensionsBox">
@@ -42,6 +43,9 @@
 			<div class ="dimensionInput  dimensionInput2"> Row Dimension2: <input id="rowInput2"  type="number" name="quantity" min="1" max="100"> </div>
 			
 			<div class ="dimensionInput   dimensionInput2"> Collumn Dimension2: <input id="collumnInput2"  type="number" name="quantity" min="1" max="100"> </div>
+
+			<div class = "dimensionInput button controll" id="calculateButton" > Calculate </div>
+
 		</div>
 		
 		<div id="matrixBox">

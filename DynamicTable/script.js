@@ -1,13 +1,19 @@
 $(document).ready(function(){
 
-
+	////////////////////////////////////////////////Global variables
 	// $("#myTable").
-
-	$createTable= $("#createTable"); //create Table button
+	$addButton = $("#addButton");
+	$subtractButton = $("#subtractButton");
 	$multiplyButton = $("#multiplyButton");
 	$transposeButton = $("#transposeButton");
-	$determinantButton = $("#determinantButton");
+	$determinantButton2 = $("#determinant2by2Button");
+	$determinantButton3 = $("#determinant3by3Button");
+	$inverseButton2 = $("#inverse2by2Button");
+	$inverseButton3 = $("#inverse3by3Button");
 	$resetButton =$("#resetButton");
+	$updateMatrices= $("#updateMatrices"); //create Table button
+
+	$calculateButton = $("#calculateButton");
 
 	$dimensionInput = $(".dimensionInput");
 	$dimensionInput1 = $(".dimensionInput1");
@@ -16,12 +22,14 @@ $(document).ready(function(){
 
 	var state = 0;
 	//0 for reset
-	//1 for multiply
-	//2 for Transpose
-	//3 for det2x2
-	//4 for det3x3
-	//5 for 2x2 Inverse
-	//6 for 3x3 Inverse
+	//1 for add 
+	//2 for subtract
+	//3 for multiply
+	//4 for Transpose
+	//5 for det2x2
+	//6 for det3x3
+	//7 for 2x2 Inverse
+	//8 for 3x3 Inverse
 
 
 	$tableLeft= ""; 
@@ -35,21 +43,121 @@ $(document).ready(function(){
 
 	$xBox = $("#xBox"); //just multiply sign
 	$equalBox = $("#equalBox"); //just stores equal sign
-	$resultsBox =  $("#resultsBox");
+	$resultsBox =  $("#resultsBox"); //where results matrix is located
 
 	$leftTableExists = false;
 	$rightTableExists = false;
 	$tableResultsExists = false;
 	$multiplyBoxExists =false;
 	$equalBoxExists =false;
+	////////////////////////////////////////////////////////////Global Variables
 
-	function removeBorder(){
+
+
+	///////////////////////////////////////////////////////////Styling Logic
+	function removeStyling(){
 		if(state==1){
-			$multiplyButton.css("border","none");
+			$addButton.css("border","none");
+		}else if(state==2){
+			$subtractButton.css("border","none");
 		}
-		if(state==2){
+		else if(state==3){
+			$multiplyButton.css("border","none");
+			$xBox.css("visibility","hidden");
+			$equalBox.css("visibility","hidden");
+		}
+		else if(state==4){
 			$transposeButton.css("border","none");
 		}
+		else if(state==5){
+			$determinantButton2.css("border","none");
+		}
+		
+		else if(state==6){
+			$determinantButton3.css("border","none")
+		}
+		else if(state==7){
+			$inverseButton2.css("border","none")
+		}
+		else if(state==8){
+			$inverseButton3.css("border","none")
+		}
+
+		
+	}
+	function removeDimensionsReadOnly(){
+
+		$rowInput1.prop('readonly', false);
+		$collumnInput1.prop('readonly', false);
+		$rowInput2.prop('readonly', false);
+		$collumnInput2.prop('readonly', false);
+
+	}
+	function canAddSubtract(){
+		if(  ($rowInput1.val() == $rowInput2.val()) &&  ($collumnInput1.val() == $collumnInput2.val()) ){
+			return true;
+		}
+		return false;
+	}
+
+	function canMultiply(){
+		if( $collumnInput1.val() == $rowInput2.val() ){
+			return true;
+		}
+
+		return false;		
+	}
+
+	function leftMarixNotZero(){
+		if( ($rowInput1.val()!=0)  && ($collumnInput1.val()!=0) ){
+					return true;
+		}
+		return false;
+	}
+
+	function rightMatrixNotZero(){
+		if( ($rowInput2.val()!=0)  && ($collumnInput2.val()!=0) ){
+					return true;
+		}
+		return false;
+	}
+	function validDimensions(){
+
+	}
+
+	function makeDimensionsReadOnly(){
+		$rowInput1.prop('readonly', true);
+		$collumnInput1.prop('readonly', true);
+		$rowInput2.prop('readonly', true);
+		$collumnInput2.prop('readonly', true);
+	}
+
+	function makeRightDimensionsReadOnly(){
+		$rowInput2.prop('readonly', true);
+		$collumnInput2.prop('readonly', true);
+	}
+
+	function reset(){ // get rid of all tables
+		
+		removeStyling();
+		
+		 // if not multiply or determinant then replace readOnly
+		removeDimensionsReadOnly();
+		
+		
+		state =0;
+		makeDimensionsAppear();
+
+		if($leftTableExists){$("#myTable1").remove(); $leftTableExists=false;}
+		if($rightTableExists){$("#myTable2").remove(); $rightTableExists=false;}
+		$resultsBox.empty();
+
+		$rowInput1.val(0); $rowInput2.val(0); $collumnInput1.val(0); $collumnInput2.val(0);
+		
+	}
+
+	function clearResultsBox(){
+		$resultsBox.empty();
 	}
 
 	function hideDimensionsInput(){
@@ -72,56 +180,6 @@ $(document).ready(function(){
 	}
 
 
-	function takeTransposeLeft(){
-		
-		$rowDim = $collumnInput1.val();
-		$collumnDim = $rowInput1.val();
-		
-		// $resultVal = $("#result11").val();
-		// console.log($resultVal);
-
-		// $("#result"+i+j).val(10);
-		console.log("collumnInput1: " + $collumnInput1.val());
-		
-		for(var i=1; i<=$rowDim; i++){
-
-			for(var j=1; j<=$collumnDim; j++){
-				//row i of left times collumn j of right
-				var matchValue = $("#Left"+j+i).val();
-				$("#result"+i+j).val(matchValue);
-			}
-
-		}
-	}
-
-	function takeDeterminant2by2(){
-		var determinant = $("#Left11").val()*$("#Left22").val() - $("#Left12").val()*$("#Left21").val();
-		console.log("determinant is: "+determinant)
-		$resultsDiv = '<div id= "determinantResult"> <h1> The determinant is:'+ determinant+ '</h1></div>';
-		$("#resultsBox").append($resultsDiv);
-
-	}
-
-	function clearResultsBox(){
-		$resultsBox.empty();
-	}
-
-	function reset(){ // get rid of all tables
-
-		state =0;
-		$xBox.css("visibility","hidden");
-		$equalBox.css("visibility","hidden");
-		makeDimensionsAppear();
-		if($leftTableExists){$("#myTable1").remove(); $leftTableExists=false;}
-		if($rightTableExists){$("#myTable2").remove(); $rightTableExists=false;}
-		$resultsBox.empty();
-		$rowInput1.val(0); $rowInput2.val(0); $collumnInput1.val(0); $collumnInput2.val(0);
-		
-
-
-	}
-	
-
 	function addLeftMatrix(){
 		$("#myTable1").remove(); // empty current table because will create replacement
 
@@ -137,7 +195,7 @@ $(document).ready(function(){
 			$tableLeft += "<tr>";
 			
 			for( var j=1; j<= $collumnDim; j++){
-				$tableLeft += '<td> <input class="matrixEntry" id="Left' + i + j + '"type="number" name="quantity" min="1" max="100">';
+				$tableLeft += '<td> <input class="matrixEntry" id="Left' + i + j + '"type="text">';
 				$tableLeft += "</td>";
 			}
 
@@ -172,7 +230,7 @@ $(document).ready(function(){
 			$tableRight += "<tr>";
 			
 			for( var j=1; j<= $collumnDim; j++){
-				$tableRight += '<td> <input class="matrixEntry" id="right'+ i + j +'" type="number" name="quantity" min="1" max="100">';
+				$tableRight += '<td> <input class="matrixEntry" id="right'+ i + j +'" type="text" >';
 				$tableRight += "</td>";
 			}
 
@@ -208,7 +266,7 @@ $(document).ready(function(){
 			$tableResults += "<tr>";
 			
 			for( var j=1; j<= $collumnDim; j++){
-				$tableResults += '<td> <input class="matrixEntry" id="result' +i +j+ '" type="number" name="quantity" min="1" max="100">';
+				$tableResults += '<td> <input class="matrixEntry" id="result' +i +j+ '" type="text" >';
 				$tableResults += "</td>";
 			}
 
@@ -228,6 +286,71 @@ $(document).ready(function(){
 
 	}
 
+	function createDefaultMatrices(){
+		addLeftMatrix();
+		addRightMatrix();
+		addResultsMatrix($rowInput1.val(), $collumnInput2.val());
+
+	}
+
+	/////////////////////////////////////////////////////////////////////////Styling Logic
+	function parseFractions(inputId){
+				
+				var inputString = $(inputId).val();
+				
+				var inputFrac = inputString.split("/");
+				
+				inputFrac[0]=parseFloat(inputFrac[0]);
+
+				var output = inputFrac[0];
+				
+				if(typeof inputFrac[1] !== 'undefined'){
+					inputFrac[1]=parseFloat(inputFrac[1]);
+					output = inputFrac[0]/inputFrac[1];
+				} 
+
+				return output;
+
+	}
+	/////////////////////////////////////////////////////////////////////////Math Logic
+	
+
+
+	function addMatrices(){
+
+		for(var i=1; i<=$rowDim; i++){
+
+			for(var j=1; j<=$collumnDim; j++){
+				//row i of left times collumn j of right
+				var leftInput = parseFractions("#Left"+i+j);
+				var rightInput = parseFractions("#right"+i+j);
+			 	
+			 	var finalOutput = leftInput + rightInput;
+			 	//var finalOutputFrac = new Fraction(finalOutput);
+				$("#result"+i+j).val(finalOutput);
+			}
+
+		}
+
+	}
+
+	function subtractMatrices(){
+
+		for(var i=1; i<=$rowDim; i++){
+
+			for(var j=1; j<=$collumnDim; j++){
+				//row i of left times collumn j of right
+				var leftInput = parseFractions("#Left"+i+j);
+				var rightInput = parseFractions("#right"+i+j);
+				var finalOutput = leftInput - rightInput;
+				$("#result"+i+j).val(finalOutput);
+			}
+
+		}
+
+	}
+
+
 	function multiplyMatrices(){
 
 		$rowDim = $rowInput1.val();
@@ -237,7 +360,7 @@ $(document).ready(function(){
 		// console.log($resultVal);
 
 		// $("#result"+i+j).val(10);
-		console.log("collumnInput1: " + $collumnInput1.val());
+		//console.log("collumnInput1: " + $collumnInput1.val());
 		
 		for(var i=1; i<=$rowDim; i++){
 
@@ -245,7 +368,11 @@ $(document).ready(function(){
 				//row i of left times collumn j of right
 				var sum =0;
 				for(var k=1; k<=$collumnInput1.val(); k++) {
-					sum+= $("#Left"+i+k).val() * $("#right"+k+j).val();
+					
+					var leftInput = parseFractions("#Left"+i+k);
+					var rightInput = parseFractions("#right"+k+j);
+
+					sum+= leftInput * rightInput;
 					//sum+= equals ik * kj
 				}
 				$("#result"+i+j).val(sum);
@@ -256,42 +383,186 @@ $(document).ready(function(){
 
 
 	}
-	$createTable.click(function(){
 
-		if( ($rowInput1.val()!=0)  && ($collumnInput1.val()!=0) ){
-				addLeftMatrix();
-		}
 
-		if( ($rowInput2.val()!=0)  && ($collumnInput2.val()!=0) ){
-				addRightMatrix();
-		}
+	function takeTransposeLeft(){
 		
-	
-	});
+		$rowDim = $collumnInput1.val();
+		$collumnDim = $rowInput1.val();
+		
+		// $resultVal = $("#result11").val();
+		// console.log($resultVal);
+
+		// $("#result"+i+j).val(10);
+		//console.log("collumnInput1: " + $collumnInput1.val());
+		
+		for(var i=1; i<=$rowDim; i++){
+
+			for(var j=1; j<=$collumnDim; j++){
+				//row i of left times collumn j of right
+				var matchValue = parseFractions("#Left"+j+i);
+				$("#result"+i+j).val(matchValue);
+			}
+
+		}
+	}
+
+	function takeResultTranspose(){
+
+	}
+
+	function determinant2by2(a,b,c,d){
+		var result = (a * d) - (b * c);
+		return result; 
+	}
+
+	function determinant3by3(){
+		var det1 = determinant2by2( parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") );
+		var det2 = determinant2by2( parseFractions("#Left21"), parseFractions("#Left23"), parseFractions("#Left31"), parseFractions("#Left33") );
+		var det3 = determinant2by2( parseFractions("#Left21"), parseFractions("#Left22"), parseFractions("#Left31"), parseFractions("#Left32") );
+
+		var mDet1 = det1 * parseFractions("#Left11");
+		var mDet2 = det2 * parseFractions("#Left12") * -1;
+		var mDet3 = det3 * parseFractions("#Left13");
+
+		var mDet = mDet1 + mDet2 + mDet3;
+		return mDet;
+	}
+	function takeDeterminant2by2(){
+		var det = determinant2by2(parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
+
+		alert("determinant is: "+det);
+		//$resultsDiv = '<div id= "determinantResult"> <h1> The determinant is:'+ det+ '</h1></div>';
+		//$("#resultsBox").append($resultsDiv);
+
+	}
 
 
-	$multiplyButton.click(function(){
+	function take2by2Inverse(){
+		var det = determinant2by2( parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
 
-		removeBorder();
-		state =1;
-		$multiplyButton.css("border","solid black");
-
-		if( $collumnInput1.val() != $rowInput2.val() ){
-
-			$("#myTable3").remove();
-
-			$errorDiv = '<div id= "errorDiv"> <h1> Invalid Dimensions: Collumn dimensions of the left matrix must equal the Row dimension of second matrix</h1> </div>'
-
-			$("#resultsBox").append($errorDiv);
+		if(det!=0){
+			var flippedDet = 1/det;
+			var res11 = flippedDet * parseFractions("#Left22");
+			var res22 = flippedDet * parseFractions("#Left11");
+			var res12 = flippedDet * parseFractions("#Left12") * -1;
+			var res21 = flippedDet * parseFractions("#Left21") * -1;
+			$("#result11").val(res11);
+			$("#result12").val(res12);
+			$("#result21").val(res21);
+			$("#result22").val(res22);
 
 		}else{
-
-			addResultsMatrix($rowInput1.val(),$collumnInput2.val());
-			multiplyMatrices();
-			$xBox.css("visibility","visible");
-			$equalBox.css("visibility","visible");
-
+			alert("Inverse is Undefined as the Determinant is 0");
 		}
+	}
+	
+	function takeDeterminant3by3(){
+		
+		var mDet = determinant3by3();
+		alert("Determinant is: "+mDet);
+		// $resultsDiv = '<div id= "determinantResult"> <h1> The determinant is:'+ mdet+ '</h1></div>';
+		// $("#resultsBox").append($resultsDiv);
+
+	}
+
+	function takeInverse3by3(){
+		var mDet = determinant3by3();
+
+		if(mDet!=0){
+			var flippedDet = 1/mDet;
+
+			var det1 = determinant2by2( parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") ); //* flippedDet;
+			var det2 = determinant2by2( parseFractions("#Left21"), parseFractions("#Left23"), parseFractions("#Left31"), parseFractions("#Left33") ) * -1;// * flippedDet * -1;
+			var det3 = determinant2by2( parseFractions("#Left21"), parseFractions("#Left22"), parseFractions("#Left31"), parseFractions("#Left32") );// * flippedDet;
+			var det4 = determinant2by2( parseFractions("#Left12"), parseFractions("#Left13"), parseFractions("#Left32"), parseFractions("#Left33") ) * -1;// * flippedDet *-1;
+			var det5 = determinant2by2( parseFractions("#Left11"), parseFractions("#Left13"), parseFractions("#Left31"), parseFractions("#Left33") );// * flippedDet;
+			var det6 = determinant2by2( parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left31"), parseFractions("#Left32") ) * -1;// * flippedDet *-1;
+			var det7 = determinant2by2( parseFractions("#Left12"), parseFractions("#Left13"), parseFractions("#Left22"), parseFractions("#Left23") );// * flippedDet;
+			var det8 = determinant2by2( parseFractions("#Left11"), parseFractions("#Left13"), parseFractions("#Left21"), parseFractions("#Left23") ) * -1;// * flippedDet *-1;
+			var det9 = determinant2by2( parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );// * flippedDet;
+
+			$("#result11").val(det1+"/"+mDet);
+			$("#result12").val(det4/mDet);
+			$("#result13").val(det7/mDet);
+			$("#result21").val(det2/mDet);
+			$("#result22").val(det5/mDet);
+			$("#result23").val(det8/mDet);
+			$("#result31").val(det3/mDet);
+			$("#result32").val(det6/mDet);
+			$("#result33").val( (det9/mDet).toPrecision(5));
+
+			//takeTransposeLeft();
+			alert("The determinant is"+ mDet);      
+		}else{
+			alert("Inverse is Undefined as the Determinant is 0");
+		}
+		
+	}
+	////////////////////////////////////////////////////////////////////Math Logic
+
+
+
+
+
+
+
+	////////////////////////////////////////////////////////////////////Event Control
+	$addButton.click(function(){
+		
+		reset();
+		state = 1; //we are adding 
+		
+		//set inputs to 3 by default
+		$addButton.css("border","solid black");
+		$rowInput1.val(2);
+		$collumnInput1.val(2);
+		$rowInput2.val(2);
+		$collumnInput2.val(2);
+		
+		//create default matrices
+		createDefaultMatrices();
+		
+	});
+
+	$subtractButton.click(function(){
+		
+		reset();
+		state = 2; //we are subtracting 
+		
+		//set inputs to 2 by default
+		$subtractButton.css("border","solid black");
+		$rowInput1.val(2);
+		$collumnInput1.val(2);
+		$rowInput2.val(2);
+		$collumnInput2.val(2);
+		
+		//create default matrices
+		createDefaultMatrices();
+		
+	});
+
+	$multiplyButton.click(function(){
+		
+		reset();
+		state =3; //we are multiplying 
+		
+		//set inputs to 3 by default
+		$multiplyButton.css("border","solid black");
+		$rowInput1.val(2);
+		$collumnInput1.val(2);
+		$rowInput2.val(2);
+		$collumnInput2.val(2);
+		
+		//create default matrices
+		createDefaultMatrices();
+
+
+		//make multiply buttons appear
+		$xBox.css("visibility","visible");
+		$equalBox.css("visibility","visible");
+
+		
 		
 	});
 
@@ -304,29 +575,167 @@ $(document).ready(function(){
 
 	$transposeButton.click(function(){
 
-		removeBorder();
+		reset(); //reset
+		state = 4; //now in transpose state
 		$transposeButton.css("border","solid black");
-		state =2;
 
-		if($rightTableExists){$("#myTable2").remove(); $rightTableExists=false;}
-		if($tableResultsExists){$("#myTable3").remove(); $tableResultsExists=false;}
-		$xBox.css("visibility","hidden");
-		$equalBox.css("visibility","hidden");
+		$rowInput1.val(2); //default val of 2
+		$collumnInput1.val(2);
 
+		makeRightDimensionsReadOnly();
+
+		
+		addLeftMatrix();
 		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
-		takeTransposeLeft();
+		//takeTransposeLeft();
 	});
 
-	$determinantButton.click(function(){
+	$determinantButton2.click(function(){
 
-		console.log("hello");
+		reset();
+		state=5;
 
-		if($rowInput1.val()==2 && $collumnInput1.val() == 2){
-			takeDeterminant2by2();
+		$rowInput1.val(2);
+		$collumnInput1.val(2);
+		
+
+		makeDimensionsReadOnly();
+
+		//create default matrices
+		addLeftMatrix();
+
+		$determinantButton2.css("border","solid black");
+
+
+	});
+
+	$determinantButton3.click(function(){
+
+		reset();
+		state=6;
+
+		$rowInput1.val(3);
+		$collumnInput1.val(3);
+		
+		makeDimensionsReadOnly();
+
+		//create default matrices
+		addLeftMatrix();
+		
+		$determinantButton3.css("border","solid black");
+
+
+	});
+
+	$inverseButton2.click(function(){
+
+		reset();
+		state=7;
+
+		$rowInput1.val(2);
+		$collumnInput1.val(2);
+		
+
+		makeDimensionsReadOnly();
+
+		//create default matrices
+		addLeftMatrix();
+		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
+
+
+		$inverseButton2.css("border","solid black");
+
+
+	});
+
+	$inverseButton3.click(function(){
+
+		reset();
+		state=8;
+
+		$rowInput1.val(3);
+		$collumnInput1.val(3);
+		
+
+		makeDimensionsReadOnly();
+
+		//create default matrices
+		addLeftMatrix();
+		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
+
+
+		$inverseButton3.css("border","solid black");
+
+
+	});
+
+
+
+	$updateMatrices.click(function(){
+		var updated= 0;
+
+		
+		if(state <=4 ){ //if not multiply and transpose then dimensions are fixed
+			
+
+			if( (state <=2) && canAddSubtract()){
+				if(leftMarixNotZero()){ addLeftMatrix(); updated++;}
+				if(rightMatrixNotZero()){addRightMatrix();updated++;}
+				
+			}
+			if( (state==3)  && canMultiply()){
+				if(leftMarixNotZero()){ addLeftMatrix(); updated++;}
+				if(rightMatrixNotZero()){ addRightMatrix(); updated++;}
+
+			}
+
+			if( (state==4) ){			
+				if(leftMarixNotZero()){addLeftMatrix();updated++;}	
+			}
+
+			if( updated!=0 ){
+				$resultsBox.empty();
+
+				if(state<=3){
+					addResultsMatrix($rowInput1.val(), $collumnInput2.val());
+				}else if(state==4){
+					addResultsMatrix($rowInput1.val(), $collumnInput1.val());
+				}
+			}
 		}
-
-
-	});
+		
 	
+	});
+
+	$calculateButton.click(function(){
+		if(state == 1){
+			addMatrices();
+		}
+		else if (state == 2) {
+			subtractMatrices();
+		}
+		else if(state == 3){ 
+			multiplyMatrices();
+		}
+		else if(state == 4){
+			takeTransposeLeft();
+		}
+		else if( state == 5){
+			takeDeterminant2by2();
+		} 
+		else if( state == 6){
+			takeDeterminant3by3();
+		}
+		else if(state==7){
+			take2by2Inverse();
+		}
+		else if(state==8){
+			takeInverse3by3();
+		}
+		
+	
+	});
+
+	////////////////////////////////////////////////Event control
 
 })
