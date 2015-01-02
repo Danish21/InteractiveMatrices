@@ -55,6 +55,63 @@ $(document).ready(function(){
 
 
 	///////////////////////////////////////////////////////////Styling Logic
+	function highlightRow(matrix, rowNumber, dimensionNumber){
+		
+		var rowLength = $("#rowInput"+ dimensionNumber).val();
+
+		for(var j=1; j<=rowLength; j++){
+
+			$("#"+matrix+rowNumber+j).css("background-color","yellow");
+
+		}
+
+	}
+
+	function unHighlightRow(matrix, rowNumber, dimensionNumber){
+
+		var rowLength = $("#rowInput"+ dimensionNumber).val();
+
+		for(var j=1; j<=rowLength; j++){
+
+			$("#"+matrix+rowNumber+j).css("background-color","white");
+
+		}
+
+	}
+
+	function highlightCollumn(matrix, collumnNumber, dimensionNumber){
+		
+		var collumnLength = $("#collumnInput"+ dimensionNumber).val();
+
+		for(var i=1; i<=collumnLength; i++){
+
+			$("#"+matrix+i+collumnNumber).css("background-color","yellow");
+
+		}
+
+	}
+
+	function unHighlightCollumn(matrix, collumnNumber, dimensionNumber){
+		
+		var collumnLength = $("#collumnInput"+ dimensionNumber).val();
+
+		for(var i=1; i<=collumnLength; i++){
+
+			$("#"+matrix+i+collumnNumber).css("background-color","white");
+
+		}
+
+	}
+
+	function highlighCell(matrix, row, collumn){
+		$("#"+matrix+row+collumn).css("background-color","yellow");
+	}
+
+	function unHighlightCell(matrix,row,collumn){
+		$("#"+matrix+row+collumn).css("background-color","white");
+	}
+
+
 	function removeStyling(){
 		if(state==1){
 			$addButton.css("border","none");
@@ -106,6 +163,13 @@ $(document).ready(function(){
 		}
 
 		return false;		
+	}
+
+	function canTranspose(){
+		if( $collumnInput1.val() == $rowInput1.val() ){
+			return true;
+		}
+		return false;
 	}
 
 	function leftMarixNotZero(){
@@ -318,6 +382,7 @@ $(document).ready(function(){
 
 	function addMatrices(){
 
+		
 		for(var i=1; i<=$rowDim; i++){
 
 			for(var j=1; j<=$collumnDim; j++){
@@ -328,12 +393,15 @@ $(document).ready(function(){
 			 	var finalOutput = leftInput + rightInput;
 			 	//var finalOutputFrac = new Fraction(finalOutput);
 				$("#result"+i+j).val(finalOutput);
+				
 			}
 
 		}
 
+
 	}
 
+	
 	function subtractMatrices(){
 
 		for(var i=1; i<=$rowDim; i++){
@@ -363,10 +431,13 @@ $(document).ready(function(){
 		//console.log("collumnInput1: " + $collumnInput1.val());
 		
 		for(var i=1; i<=$rowDim; i++){
+			
 
 			for(var j=1; j<=$collumnDim; j++){
 				//row i of left times collumn j of right
 				var sum =0;
+				highlightRow("Left",i,1);
+				highlightCollumn("right",j,2);
 				for(var k=1; k<=$collumnInput1.val(); k++) {
 					
 					var leftInput = parseFractions("#Left"+i+k);
@@ -375,15 +446,16 @@ $(document).ready(function(){
 					sum+= leftInput * rightInput;
 					//sum+= equals ik * kj
 				}
-				$("#result"+i+j).val(sum);
+				$("#result"+i+j).val(sum);	
+				
 			}
 
 		}
 
 
-
 	}
 
+	
 
 	function takeTransposeLeft(){
 		
@@ -501,9 +573,229 @@ $(document).ready(function(){
 	}
 	////////////////////////////////////////////////////////////////////Math Logic
 
+	/////////////////////////////////////////////////////////////////////animated Math
+	function animatedTranspose(){
+
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput1.val();
+		var row = 1; var collumn = 0;
+		var rowPrev = 1; var collumnPrev=0;
+		var stop = 0;
 
 
+		function frame(){
+			if(stop==0){
 
+				collumn++;
+				unHighlightCell("result",rowPrev,collumnPrev);
+				unHighlightCell("Left",collumnPrev,rowPrev); //unHighlight old cells
+
+				highlighCell("result",row,collumn);
+				highlighCell("Left",collumn,row); //highlight new cells
+
+				var matchValue = parseFractions("#Left"+collumn+row);
+				$("#result"+row+collumn).val(matchValue);
+			 	
+			 	
+				
+				collumnPrev = collumn;
+				rowPrev = row;
+
+				if( (row==$rowDim) && (collumn == $collumnDim)  ){
+						 stop=1;
+				}
+					
+
+				if(collumn==$collumnDim){
+						row++;
+						collumn=0;
+				}
+
+			}else{
+				unHighlightCell("result",rowPrev,collumnPrev);
+				unHighlightCell("Left",collumnPrev,rowPrev); //unHighlight old cells
+				clearInterval(id);
+			}
+			
+		}
+
+		var id = setInterval(frame, 3000) // draw every 3seconds
+
+	}
+
+	function animatedAdd(){
+
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput2.val();
+		var row = 1; var collumn = 0;
+		var rowPrev = 1; var collumnPrev=0;
+		var stop = 0;
+
+
+		function frame(){
+			if(stop==0){
+
+				collumn++;
+				unHighlightCell("Left",rowPrev,collumnPrev); //unHighlight old cells
+				unHighlightCell("right",rowPrev,collumnPrev);
+				unHighlightCell("result",rowPrev,collumnPrev);
+
+				highlighCell("Left",row,collumn); //highlight new cells
+				highlighCell("right",row,collumn);
+				highlighCell("result",row,collumn);
+
+				var leftInput = parseFractions("#Left"+row+collumn); //get inputs and add
+				var rightInput = parseFractions("#right"+row+collumn);
+				var finalOutput = leftInput + rightInput;
+				$("#result"+row+collumn).val(finalOutput);
+			 	
+			 	
+				
+				collumnPrev = collumn;
+				rowPrev = row;
+
+				if( (row==$rowDim) && (collumn == $collumnDim)  ){
+						 stop=1;
+				}
+					
+
+				if(collumn==$collumnDim){
+						row++;
+						collumn=0;
+				}
+
+			}else{
+				unHighlightCell("Left",rowPrev,collumnPrev);
+				unHighlightCell("right",rowPrev,collumnPrev);
+				unHighlightCell("result",rowPrev,collumnPrev);
+				clearInterval(id);
+			}
+			
+		}
+
+		var id = setInterval(frame, 3000) // draw every 3seconds
+
+	}
+
+	function animatedSubtract(){
+
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput2.val();
+		var row = 1; var collumn = 0;
+		var rowPrev = 1; var collumnPrev=0;
+		var stop = 0;
+
+
+		function frame(){
+			if(stop==0){
+
+				collumn++;
+				unHighlightCell("Left",rowPrev,collumnPrev); //unHighlight old cells
+				unHighlightCell("right",rowPrev,collumnPrev);
+				unHighlightCell("result",rowPrev,collumnPrev);
+
+				highlighCell("Left",row,collumn); //highlight new cells
+				highlighCell("right",row,collumn);
+				highlighCell("result",row,collumn);
+
+				var leftInput = parseFractions("#Left"+row+collumn); //get inputs and add
+				var rightInput = parseFractions("#right"+row+collumn);
+				var finalOutput = leftInput - rightInput;
+				$("#result"+row+collumn).val(finalOutput);
+			 	
+			 	
+				
+				collumnPrev = collumn;
+				rowPrev = row;
+
+				if( (row==$rowDim) && (collumn == $collumnDim)  ){
+						 stop=1;
+				}
+					
+
+				if(collumn==$collumnDim){
+						row++;
+						collumn=0;
+				}
+
+			}else{
+				unHighlightCell("Left",rowPrev,collumnPrev);
+				unHighlightCell("right",rowPrev,collumnPrev);
+				unHighlightCell("result",rowPrev,collumnPrev);
+				clearInterval(id);
+			}
+			
+		}
+
+		var id = setInterval(frame, 3000) // draw every 3seconds
+
+	}
+
+
+	function animatedMultiplyMatrices(){
+
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput2.val();
+		var row = 1; var collumn = 0;
+		var rowPrev = 1; var collumnPrev=1;
+		var stop =0;
+		function frame(){
+			if(stop ==0){
+				unHighlightRow("Left",rowPrev,1);
+				unHighlightCollumn("right",collumnPrev,2);
+				unHighlightCell("result",rowPrev,collumnPrev);
+
+				collumn++;
+
+				highlightRow("Left",row,1);
+				highlightCollumn("right",collumn,2);
+
+				var sum =0;
+				
+				
+				for(var k=1; k<=$collumnInput1.val(); k++) {
+						
+					var leftInput = parseFractions("#Left"+row+k);
+					var rightInput = parseFractions("#right"+k+collumn);
+
+					sum+= leftInput * rightInput;
+						//sum+= equals ik * kj
+				}
+				
+				$("#result"+row+collumn).val(sum);	
+				highlighCell("result",row,collumn);
+				collumnPrev = collumn;
+				rowPrev = row;
+
+				if( (row==$rowDim) && (collumn == $collumnDim)  ){
+					 stop=1;
+				}
+				
+
+				if(collumn==$collumnDim){
+					row++;
+					collumn=0;
+				}
+
+			}else{
+				clearInterval(id);
+				unHighlightRow("Left",$rowInput1.val(),1);
+		 		unHighlightCollumn("right",$collumnInput2.val(),2);
+		 		unHighlightCell("result",$rowInput1.val(),$collumnInput2.val());
+			}
+			
+
+		}
+
+		 var id = setInterval(frame, 3000) // draw every 10ms
+		 
+
+	}
+
+	
+
+
+	///////////////////////////////////////////////////////////////////animated functions
 
 
 
@@ -689,8 +981,8 @@ $(document).ready(function(){
 
 			}
 
-			if( (state==4) ){			
-				if(leftMarixNotZero()){addLeftMatrix();updated++;}	
+			if( (state==4) && canTranspose() ){			
+				if(leftMarixNotZero() ){addLeftMatrix();updated++;}	
 			}
 
 			if( updated!=0 ){
@@ -709,16 +1001,22 @@ $(document).ready(function(){
 
 	$calculateButton.click(function(){
 		if(state == 1){
-			addMatrices();
+			//addMatrices();
+			animatedAdd();
 		}
 		else if (state == 2) {
-			subtractMatrices();
+			//subtractMatrices();
+			animatedSubtract();
+			
 		}
 		else if(state == 3){ 
-			multiplyMatrices();
+			//multiplyMatrices();
+			animatedMultiplyMatrices();
+
 		}
 		else if(state == 4){
-			takeTransposeLeft();
+			//takeTransposeLeft();
+			animatedTranspose();
 		}
 		else if( state == 5){
 			takeDeterminant2by2();
