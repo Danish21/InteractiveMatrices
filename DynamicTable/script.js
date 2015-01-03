@@ -107,6 +107,10 @@ $(document).ready(function(){
 		$("#"+matrix+row+collumn).css("background-color","yellow");
 	}
 
+	function highlighCellCustom(matrix, row, collumn, color){
+		$("#"+matrix+row+collumn).css("background-color",color);
+	}
+
 	function unHighlightCell(matrix,row,collumn){
 		$("#"+matrix+row+collumn).css("background-color","white");
 	}
@@ -793,8 +797,179 @@ $(document).ready(function(){
 	}
 
 	
+	function animatedDeterminant2by2(){
+
+		highlighCell("Left",1,1);
+		highlighCell("Left",2,2);
 
 
+
+		function step2(){
+			
+			function step3(){
+
+			unHighlightCell("Left",1,2);
+			unHighlightCell("Left",2,1);
+			clearInterval(id2);
+			takeDeterminant2by2();
+
+			}
+
+			unHighlightCell("Left",1,1);
+			unHighlightCell("Left",2,2);
+			highlighCell("Left",1,2);
+			highlighCell("Left",2,1);
+
+			clearInterval(id);
+			var id2 =  setInterval(step3, 3000);
+
+
+		}
+		var id = setInterval(step2, 3000);
+
+	}
+	function animatedDeterminant3by3(){
+
+		highlighCellCustom("Left",1,1, "blue");
+		highlighCell("Left",2,2);
+		highlighCell("Left",2,3);
+		highlighCell("Left",3,2);
+		highlighCell("Left",3,3);
+		
+
+
+
+		function step2(){
+
+			unHighlightCell("Left",1,1);
+			unHighlightCell("Left",2,2);
+			unHighlightCell("Left",2,3);
+			unHighlightCell("Left",3,2);
+			unHighlightCell("Left",3,3);
+
+			highlighCellCustom("Left",1,2,"blue");
+			highlighCell("Left",2,1);
+			highlighCell("Left",2,3);
+			highlighCell("Left",3,1);
+			highlighCell("Left",3,3);
+			
+			function step3(){
+
+				unHighlightCell("Left",1,2);
+				unHighlightCell("Left",2,1);
+				unHighlightCell("Left",2,3);
+				unHighlightCell("Left",3,1);
+				unHighlightCell("Left",3,3);
+
+				highlighCellCustom("Left",1,3,"blue");
+				highlighCell("Left",2,1);
+				highlighCell("Left",2,2);
+				highlighCell("Left",3,1);
+				highlighCell("Left",3,2);
+
+				function step4(){
+
+					unHighlightCell("Left",1,3);
+					unHighlightCell("Left",2,1);
+					unHighlightCell("Left",2,2);
+					unHighlightCell("Left",3,1);
+					unHighlightCell("Left",3,2);
+					clearInterval(id3);
+					takeDeterminant3by3();
+
+				}
+
+				clearInterval(id2);
+				
+				var id3 =  setInterval(step4, 3000);
+
+			}
+
+			
+
+			clearInterval(id);
+			var id2 =  setInterval(step3, 3000);
+
+
+		}
+		var id = setInterval(step2, 3000);
+
+
+	}
+
+	function animatedInverse2by2(){
+		var det = determinant2by2( parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
+
+		if(det!=0){
+			flippedDet = 1/det;
+			highlighCellCustom("Left",1,1,"blue");
+			highlighCellCustom("Left",2,2,"red");
+			highlighCellCustom("result",1,1,"red");
+			highlighCellCustom("result",2,2,"blue");
+			var res11 = flippedDet * parseFractions("#Left22");
+			var res22 = flippedDet * parseFractions("#Left11");
+			$("#result11").val(res11);
+			$("#result22").val(res22);
+
+			function step2(){
+
+				unHighlightCell("Left",1,1);
+				unHighlightCell("Left",2,2);
+				unHighlightCell("result",1,1);
+				unHighlightCell("result",2,2);
+
+				highlighCellCustom("Left",1,2,"blue");
+				highlighCellCustom("Left",2,1,"red");
+				highlighCellCustom("result",1,2,"blue");
+				highlighCellCustom("result",2,1,"red");
+
+				var res12 = flippedDet * parseFractions("#Left12") * -1;
+				var res21 = flippedDet * parseFractions("#Left21") * -1;
+			
+				$("#result12").val(res12);
+				$("#result21").val(res21);
+			
+
+				function step3(){
+					unHighlightCell("Left",1,2);
+					unHighlightCell("Left",2,1);
+					unHighlightCell("result",1,2);
+					unHighlightCell("result",2,1);
+
+					clearInterval(id2)
+				}
+
+				clearInterval(id);
+				var id2 = setInterval(step3, 3000);
+			}
+
+			var id = setInterval(step2, 3000);
+
+		}else{
+			alert("Inverse is Undefined as the Determinant is 0");
+		}
+
+
+
+	}
+
+	function animatedInverse3by3(){
+
+		var mDet = determinant3by3();
+
+
+		if(mDet!=0){
+			var flippedDet = 1/mDet;
+			var det1 = determinant2by2( parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") ); //* flippedDet;
+			$("#result11").val(det1+"/"+mDet);
+
+
+
+		}else{
+			alert("Inverse is Undefined as the Determinant is 0");
+		}
+
+	}
 	///////////////////////////////////////////////////////////////////animated functions
 
 
@@ -1019,13 +1194,16 @@ $(document).ready(function(){
 			animatedTranspose();
 		}
 		else if( state == 5){
-			takeDeterminant2by2();
+			//takeDeterminant2by2();
+			animatedDeterminant2by2();
 		} 
 		else if( state == 6){
-			takeDeterminant3by3();
+			//takeDeterminant3by3();
+			animatedDeterminant3by3();
 		}
 		else if(state==7){
-			take2by2Inverse();
+			//take2by2Inverse();
+			animatedInverse2by2();
 		}
 		else if(state==8){
 			takeInverse3by3();
