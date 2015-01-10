@@ -32,34 +32,44 @@
 
 			<div class="button controll" id="updateMatrices" > Resize Matrices</div>
 			<div class = "button controll" id="resetButton"  > Reset </div>
+			<div class = "button controll" id="calculateButton" > Calculate </div>
 
 		</div>
 		<div id="dimensionsBox">
 			
-			<div class ="dimensionInput dimensionInput1">Row Dimension1: <input id="rowInput1"   type="number" name="quantity" min="1" max="100"></div>
+			<div class ="dimensionInput dimensionInput1">Row Dimension1: <input id="rowInput1"   type="number" name="quantity" min="1" max="10"></div>
 			
-			<div class ="dimensionInput dimensionInput1"> Collumn Dimension1: <input id="collumnInput1"  type="number" name="quantity" min="1" max="100"> </div>
+			<div class ="dimensionInput dimensionInput1"> Collumn Dimension1: <input id="collumnInput1"  type="number" name="quantity" min="1" max="10"> </div>
 
-			<div class ="dimensionInput  dimensionInput2"> Row Dimension2: <input id="rowInput2"  type="number" name="quantity" min="1" max="100"> </div>
+			<div class ="dimensionInput  dimensionInput2"> Row Dimension2: <input id="rowInput2"  type="number" name="quantity" min="1" max="10"> </div>
 			
-			<div class ="dimensionInput   dimensionInput2"> Collumn Dimension2: <input id="collumnInput2"  type="number" name="quantity" min="1" max="100"> </div>
+			<div class ="dimensionInput   dimensionInput2"> Collumn Dimension2: <input id="collumnInput2"  type="number" name="quantity" min="1" max="10"> </div>
 
-			<div class = "dimensionInput button controll" id="calculateButton" > Calculate </div>
+			
 
 		</div>
 		
 		<div id="matrixBox">
 			<div id="tableBox1" class="tableBox"></div>
 
-			<div id="xBox" class="tableBox">X</div>
+			<!--<div id="xBox" class="tableBox">X</div>-->
 
 			<div id="tableBox2" class="tableBox"></div>
 
-			<div id="equalBox" class="tableBox">=</div>
+			<!--<div id="equalBox" class="tableBox">=</div>-->
+
+			<div id= "resultsBox" class="tableBox"> </div>
 		</div>
 
-		<div id= "resultsBox"> </div>
+		
+		<div id="solutionBox">
+			
 
+			<h1 id="animationText"></h1>
+
+
+
+		</div>
 
 
 	</body>
