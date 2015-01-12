@@ -256,7 +256,7 @@ $(document).ready(function(){
 		console.log($rowDim);
 		console.log($collumnDim);
 
-		$tableLeft += '<table id ="myTable1">';
+		$tableLeft += '<table id ="myTable1" class="matrix">';
 
 		for(var i=1; i <= $rowDim; i++){ //starting at one so coordinates line up
 			
@@ -291,7 +291,7 @@ $(document).ready(function(){
 		console.log($rowDim);
 		console.log($collumnDim);
 
-		$tableRight += '<table id ="myTable2">';
+		$tableRight += '<table id ="myTable2" class="matrix">';
 
 		for(var i=1; i <= $rowDim; i++){
 			
@@ -327,14 +327,14 @@ $(document).ready(function(){
 		$collumnDim = collumnDimension;
 		
 
-		$tableResults += '<table id ="myTable3">';
+		$tableResults += '<table id ="myTable3" class="matrix">';
 
 		for(var i=1; i <= $rowDim; i++){
 			
 			$tableResults += "<tr>";
 			
 			for( var j=1; j<= $collumnDim; j++){
-				$tableResults += '<td> <input class="matrixEntry" id="result' +i +j+ '" type="text" >';
+				$tableResults += '<td> <input class="matrixEntry" id="result' +i +j+ '" type="text" readonly>';
 				$tableResults += "</td>";
 			}
 
@@ -383,10 +383,30 @@ $(document).ready(function(){
 	/////////////////////////////////////////////////////////////////////////Math Logic
 	
 
+	function scalarMultiply(matrix,scalar,rowDim,collumnDim){
+
+		
+
+		for(var i=1; i<=$rowDim; i++){
+
+			for(var j=1; j<=$collumnDim; j++){
+				//row i of left times collumn j of right
+				var originalVal = parseFractions("#"+matrix+i+j);
+			 	//var finalOutputFrac = new Fraction(finalOutput);
+				$("#"+matrix+i+j).val(scalar * originalVal);
+				
+			}
+
+		}
+
+	}
+	
 
 	function addMatrices(){
 
-		
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput2.val();
+
 		for(var i=1; i<=$rowDim; i++){
 
 			for(var j=1; j<=$collumnDim; j++){
@@ -407,6 +427,8 @@ $(document).ready(function(){
 
 	
 	function subtractMatrices(){
+		$rowDim = $rowInput1.val();
+		$collumnDim = $collumnInput2.val();
 
 		for(var i=1; i<=$rowDim; i++){
 
@@ -484,7 +506,38 @@ $(document).ready(function(){
 	}
 
 	function takeResultTranspose(){
+		$rowDim = $collumnInput1.val();
+		$collumnDim = $rowInput1.val();
+		
+		// $resultVal = $("#result11").val();
+		// console.log($resultVal);
 
+		// $("#result"+i+j).val(10);
+		//console.log("collumnInput1: " + $collumnInput1.val());
+		
+		
+				//row i of left times collumn j of right
+			var matchValue1 = parseFractions("#result"+1+1);
+			var matchValue2 = parseFractions("#result"+1+2);
+			var matchValue3 = parseFractions("#result"+1+3);
+			var matchValue4 = parseFractions("#result"+2+1);
+			var matchValue5 = parseFractions("#result"+2+2);
+			var matchValue6 = parseFractions("#result"+2+3);
+			var matchValue7 = parseFractions("#result"+3+1);
+			var matchValue8 = parseFractions("#result"+3+2);
+			var matchValue9 = parseFractions("#result"+3+3);
+
+			$("#result"+1+1).val(matchValue1);
+			$("#result"+1+2).val(matchValue4);
+			$("#result"+1+3).val(matchValue7);
+			$("#result"+2+1).val(matchValue2);
+			$("#result"+2+2).val(matchValue5);
+			$("#result"+2+3).val(matchValue8);
+			$("#result"+3+1).val(matchValue3);
+			$("#result"+3+2).val(matchValue6);
+			$("#result"+3+3).val(matchValue9);
+		
+	
 	}
 
 	function determinant2by2(a,b,c,d){
@@ -579,7 +632,7 @@ $(document).ready(function(){
 
 	/////////////////////////////////////////////////////////////////////animated Math
 	function animatedTranspose(){
-
+		$("#solutionBox").html('<h1 id="animationText"></h1>');
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput1.val();
 		var row = 1; var collumn = 0;
@@ -628,7 +681,7 @@ $(document).ready(function(){
 	}
 
 	function animatedAdd(){
-
+		$("#solutionBox").html('<h1 id="animationText"></h1>');
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput2.val();
 		var row = 1; var collumn = 0;
@@ -652,8 +705,9 @@ $(document).ready(function(){
 				var rightInput = parseFractions("#right"+row+collumn);
 				var finalOutput = leftInput + rightInput;
 				$("#result"+row+collumn).val(finalOutput);
+				var outputString = leftInput + " + " + rightInput + " = " + finalOutput ;
 			 	
-			 	
+			 	$("#animationText").html(outputString );
 				
 				collumnPrev = collumn;
 				rowPrev = row;
@@ -672,6 +726,7 @@ $(document).ready(function(){
 				unHighlightCell("Left",rowPrev,collumnPrev);
 				unHighlightCell("right",rowPrev,collumnPrev);
 				unHighlightCell("result",rowPrev,collumnPrev);
+				$("#animationText").html("" );
 				clearInterval(id);
 			}
 			
@@ -682,7 +737,7 @@ $(document).ready(function(){
 	}
 
 	function animatedSubtract(){
-
+		$("#solutionBox").html('<h1 id="animationText"></h1>');;
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput2.val();
 		var row = 1; var collumn = 0;
@@ -707,7 +762,8 @@ $(document).ready(function(){
 				var finalOutput = leftInput - rightInput;
 				$("#result"+row+collumn).val(finalOutput);
 			 	
-			 	
+			 	var outputString = leftInput + " - " + rightInput + " = " + finalOutput ;
+			 	$("#animationText").html(outputString );
 				
 				collumnPrev = collumn;
 				rowPrev = row;
@@ -726,6 +782,7 @@ $(document).ready(function(){
 				unHighlightCell("Left",rowPrev,collumnPrev);
 				unHighlightCell("right",rowPrev,collumnPrev);
 				unHighlightCell("result",rowPrev,collumnPrev);
+				$("#animationText").html("" );
 				clearInterval(id);
 			}
 			
@@ -737,7 +794,7 @@ $(document).ready(function(){
 
 
 	function animatedMultiplyMatrices(){
-
+		$("#solutionBox").html('<h1 id="animationText"></h1>');
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput2.val();
 		var row = 1; var collumn = 0;
@@ -756,16 +813,22 @@ $(document).ready(function(){
 
 				var sum =0;
 				
-				
+				$("#animationText").html("");
 				for(var k=1; k<=$collumnInput1.val(); k++) {
 						
 					var leftInput = parseFractions("#Left"+row+k);
 					var rightInput = parseFractions("#right"+k+collumn);
 
 					sum+= leftInput * rightInput;
+					if(k!=$collumnInput1.val()){
+						var outputString = "( " + leftInput + " * " + rightInput + " )" + " + " ;
+					}else{
+						var outputString = "( " + leftInput + " * " + rightInput + " )" ;
+					}
+			 		$("#animationText").append(outputString );
 						//sum+= equals ik * kj
 				}
-				
+				$("#animationText").append("<p> Total = " + sum + "</p>" );
 				$("#result"+row+collumn).val(sum);	
 				highlighCell("result",row,collumn);
 				collumnPrev = collumn;
@@ -786,6 +849,7 @@ $(document).ready(function(){
 				unHighlightRow("Left",$rowInput1.val(),1);
 		 		unHighlightCollumn("right",$collumnInput2.val(),2);
 		 		unHighlightCell("result",$rowInput1.val(),$collumnInput2.val());
+		 		$("#animationText").html("");
 			}
 			
 
@@ -798,20 +862,30 @@ $(document).ready(function(){
 
 	
 	function animatedDeterminant2by2(){
-
+		$("#solutionBox").html("");
 		highlighCell("Left",1,1);
 		highlighCell("Left",2,2);
-
-
+		$("#animationText").html(" Determinant = ( a x d )-( b x c ) = ");
+		$("#animationText").append("( " + parseFractions("#Left11") + " x " + parseFractions("#Left22") + " )");
 
 		function step2(){
 			
 			function step3(){
 
-			unHighlightCell("Left",1,2);
-			unHighlightCell("Left",2,1);
-			clearInterval(id2);
-			takeDeterminant2by2();
+				unHighlightCell("Left",1,2);
+				unHighlightCell("Left",2,1);
+				clearInterval(id2);
+				var det = determinant2by2(parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
+				$("#animationText").append(" = " + det);
+
+				function step4(){
+
+					clearInterval(id3);
+					$("#animationText").html("");
+
+				}
+
+				var id3 =  setInterval(step4, 3000);
 
 			}
 
@@ -819,7 +893,7 @@ $(document).ready(function(){
 			unHighlightCell("Left",2,2);
 			highlighCell("Left",1,2);
 			highlighCell("Left",2,1);
-
+			$("#animationText").append(" + ( " + parseFractions("#Left12") + " x " + parseFractions("#Left21") + " )");
 			clearInterval(id);
 			var id2 =  setInterval(step3, 3000);
 
@@ -829,14 +903,16 @@ $(document).ready(function(){
 
 	}
 	function animatedDeterminant3by3(){
-
+		$("#solutionBox").html("");
+		var det1 = 0; var det2=0; var det3 = 0;
 		highlighCellCustom("Left",1,1, "blue");
 		highlighCell("Left",2,2);
 		highlighCell("Left",2,3);
 		highlighCell("Left",3,2);
 		highlighCell("Left",3,3);
 		
-
+		det1 = parseFractions("#Left11") * determinant2by2(parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") );
+		$("#solutionBox").append("<p>" + "Subdeterminant1 = " + parseFractions("#Left11") + " x (" + parseFractions("#Left22") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left23") + " x " + parseFractions("#Left32") + " ) = " + det1 + "</p>");
 
 
 		function step2(){
@@ -852,7 +928,8 @@ $(document).ready(function(){
 			highlighCell("Left",2,3);
 			highlighCell("Left",3,1);
 			highlighCell("Left",3,3);
-			
+			det2 = parseFractions("#Left12") * determinant2by2(parseFractions("#Left21"), parseFractions("#Left23"), parseFractions("#Left31"), parseFractions("#Left33") );
+			$("#solutionBox").append("<p>" + "Subdeterminant2 = " + parseFractions("#Left12") + " x (" + parseFractions("#Left21") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left23") + " x " + parseFractions("#Left31") + " ) = " + det2 + "</p>");
 			function step3(){
 
 				unHighlightCell("Left",1,2);
@@ -867,15 +944,20 @@ $(document).ready(function(){
 				highlighCell("Left",3,1);
 				highlighCell("Left",3,2);
 
-				function step4(){
+				det3 = parseFractions("#Left13") *determinant2by2(parseFractions("#Left21"), parseFractions("#Left22"), parseFractions("#Left31"), parseFractions("#Left32") );
+				$("#solutionBox").append("<p>" + "Subdeterminant3 = " + parseFractions("#Left13") + " x (" + parseFractions("#Left21") + " x " + parseFractions("#Left32") + " )" + " - ( " + parseFractions("#Left22") + " x " + parseFractions("#Left31") + " ) = " + det3 + "</p>");
 
+				function step4(){
+					var overallDet = det1 - det2 +  det3;
+					$("#solutionBox").append("<p> The determinant is " + det1 + " - " + det2 + " + " + det3 + " = " + overallDet + "</p>" );
 					unHighlightCell("Left",1,3);
 					unHighlightCell("Left",2,1);
 					unHighlightCell("Left",2,2);
 					unHighlightCell("Left",3,1);
 					unHighlightCell("Left",3,2);
 					clearInterval(id3);
-					takeDeterminant3by3();
+					//takeDeterminant3by3();
+
 
 				}
 
@@ -898,16 +980,18 @@ $(document).ready(function(){
 	}
 
 	function animatedInverse2by2(){
+		$("#solutionBox").html("");
 		var det = determinant2by2( parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
 
 		if(det!=0){
 			flippedDet = 1/det;
+			$("#solutionBox").append("<p> Swap the first diagnol entries</p>" );
 			highlighCellCustom("Left",1,1,"blue");
 			highlighCellCustom("Left",2,2,"red");
 			highlighCellCustom("result",1,1,"red");
 			highlighCellCustom("result",2,2,"blue");
-			var res11 = flippedDet * parseFractions("#Left22");
-			var res22 = flippedDet * parseFractions("#Left11");
+			var res11 = parseFractions("#Left22");
+			var res22 = parseFractions("#Left11");
 			$("#result11").val(res11);
 			$("#result22").val(res22);
 
@@ -923,14 +1007,17 @@ $(document).ready(function(){
 				highlighCellCustom("result",1,2,"blue");
 				highlighCellCustom("result",2,1,"red");
 
-				var res12 = flippedDet * parseFractions("#Left12") * -1;
-				var res21 = flippedDet * parseFractions("#Left21") * -1;
-			
+				var res12 = parseFractions("#Left12") * -1;
+				var res21 = parseFractions("#Left21") * -1;
+				$("#solutionBox").append("<p> Multiply the opposite diagnol entries by -1</p>" );
+
 				$("#result12").val(res12);
 				$("#result21").val(res21);
 			
 
 				function step3(){
+					scalarMultiply("result",flippedDet,2,2);
+					$("#solutionBox").append("<p> Multiply the matrix by 1 over the determinant which in this case is 1 " +"/ "+ det + "</p>" );
 					unHighlightCell("Left",1,2);
 					unHighlightCell("Left",2,1);
 					unHighlightCell("result",1,2);
@@ -954,20 +1041,281 @@ $(document).ready(function(){
 	}
 
 	function animatedInverse3by3(){
+		$("#solutionBox").html("");
+		var det1 = 0; var det2=0; var det3 = 0; var det4=0; var det5 = 0; var det6=0; var det7=0; var det8=0; var det9=0;
+		highlighCellCustom("result",1,1, "blue");
+		highlighCell("Left",2,2);
+		highlighCell("Left",2,3);
+		highlighCell("Left",3,2);
+		highlighCell("Left",3,3);
+		
+		det1 = determinant2by2(parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") );
+		$("#solutionBox").append("<p>" + "Subdeterminant1 = ( " + parseFractions("#Left22") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left23") + " x " + parseFractions("#Left32") + " ) = " + det1 + "</p>");
+		$("#result11").val(det1);
 
-		var mDet = determinant3by3();
+		function step2(){
+
+			unHighlightCell("result",1,1);
+			unHighlightCell("Left",2,2);
+			unHighlightCell("Left",2,3);
+			unHighlightCell("Left",3,2);
+			unHighlightCell("Left",3,3);
+
+			highlighCellCustom("result",1,2,"blue");
+			highlighCell("Left",2,1);
+			highlighCell("Left",2,3);
+			highlighCell("Left",3,1);
+			highlighCell("Left",3,3);
+			det2 =  determinant2by2(parseFractions("#Left21"), parseFractions("#Left23"), parseFractions("#Left31"), parseFractions("#Left33") );
+			$("#solutionBox").append("<p>" + "Subdeterminant2 = ( " + parseFractions("#Left21") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left23") + " x " + parseFractions("#Left31") + " ) = " + det2 + "</p>");
+			$("#result12").val(det2);
+			function step3(){
+
+				unHighlightCell("result",1,2);
+				unHighlightCell("Left",2,1);
+				unHighlightCell("Left",2,3);
+				unHighlightCell("Left",3,1);
+				unHighlightCell("Left",3,3);
+
+				highlighCellCustom("result",1,3,"blue");
+				highlighCell("Left",2,1);
+				highlighCell("Left",2,2);
+				highlighCell("Left",3,1);
+				highlighCell("Left",3,2);
+
+				det3 = parseFractions("#Left13") *determinant2by2(parseFractions("#Left21"), parseFractions("#Left22"), parseFractions("#Left31"), parseFractions("#Left32") );
+				$("#solutionBox").append("<p>" + "Subdeterminant3 = ( "  + parseFractions("#Left21") + " x " + parseFractions("#Left32") + " )" + " - ( " + parseFractions("#Left22") + " x " + parseFractions("#Left31") + " ) = " + det3 + "</p>");
+				$("#result13").val(det3);
+
+				function step4(){
+					unHighlightCell("result",1,3);
+					unHighlightCell("Left",2,1);
+					unHighlightCell("Left",2,2);
+					unHighlightCell("Left",3,1);
+					unHighlightCell("Left",3,2);
+
+					highlighCellCustom("result",2,1,"blue");
+					highlighCell("Left",1,2);
+					highlighCell("Left",1,3);
+					highlighCell("Left",3,2);
+					highlighCell("Left",3,3);
+
+					det4 = determinant2by2(parseFractions("#Left12"), parseFractions("#Left13"), parseFractions("#Left32"), parseFractions("#Left33") );
+					$("#solutionBox").append("<p>" + "Subdeterminant4 = ( "  + parseFractions("#Left12") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left32") + " x " + parseFractions("#Left13") + " ) = " + det4 + "</p>");
+					$("#result21").val(det4);
+
+					function step5(){
+						
+						unHighlightCell("result",2,1);
+						unHighlightCell("Left",1,2);
+						unHighlightCell("Left",1,3);
+						unHighlightCell("Left",3,2);
+						unHighlightCell("Left",3,3);
+
+						highlighCellCustom("result",2,2,"blue");
+						highlighCell("Left",1,1);
+						highlighCell("Left",1,3);
+						highlighCell("Left",3,1);
+						highlighCell("Left",3,3);
+
+						det5 = determinant2by2(parseFractions("#Left11"), parseFractions("#Left13"), parseFractions("#Left31"), parseFractions("#Left33") );
+						$("#solutionBox").append("<p>" + "Subdeterminant5 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left33") + " )" + " - ( " + parseFractions("#Left31") + " x " + parseFractions("#Left13") + " ) = " + det5 + "</p>");
+						$("#result22").val(det5);
+
+						function step6(){
+						
+							unHighlightCell("result",2,2);
+							unHighlightCell("Left",1,1);
+							unHighlightCell("Left",1,3);
+							unHighlightCell("Left",3,1);
+							unHighlightCell("Left",3,3);
+
+							highlighCellCustom("result",2,3,"blue");
+							highlighCell("Left",1,1);
+							highlighCell("Left",1,2);
+							highlighCell("Left",3,1);
+							highlighCell("Left",3,2);
+
+							det6 = determinant2by2(parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left31"), parseFractions("#Left32") );
+							$("#solutionBox").append("<p>" + "Subdeterminant3 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left32") + " )" + " - ( " + parseFractions("#Left31") + " x " + parseFractions("#Left12") + " ) = " + det6 + "</p>");
+							$("#result23").val(det6);
+
+							function step7(){
 
 
-		if(mDet!=0){
-			var flippedDet = 1/mDet;
-			var det1 = determinant2by2( parseFractions("#Left22"), parseFractions("#Left23"), parseFractions("#Left32"), parseFractions("#Left33") ); //* flippedDet;
-			$("#result11").val(det1+"/"+mDet);
+								unHighlightCell("result",2,3);
+								unHighlightCell("Left",1,1);
+								unHighlightCell("Left",1,2);
+								unHighlightCell("Left",3,1);
+								unHighlightCell("Left",3,2);
+
+								highlighCellCustom("result",3,1,"blue");
+								highlighCell("Left",1,2);
+								highlighCell("Left",1,3);
+								highlighCell("Left",2,2);
+								highlighCell("Left",2,3);
+
+								det7 = determinant2by2(parseFractions("#Left12"), parseFractions("#Left13"), parseFractions("#Left22"), parseFractions("#Left23") );
+								$("#solutionBox").append("<p>" + "Subdeterminant7 = (" + parseFractions("#Left12") + " x " + parseFractions("#Left23") + " )" + " - ( " + parseFractions("#Left22") + " x " + parseFractions("#Left13") + " ) = " + det7 + "</p>");
+								$("#result31").val(det7);
+
+								function step8(){
 
 
+									unHighlightCell("result",3,1);
+									unHighlightCell("Left",1,2);
+									unHighlightCell("Left",1,3);
+									unHighlightCell("Left",2,2);
+									unHighlightCell("Left",2,3);
 
-		}else{
-			alert("Inverse is Undefined as the Determinant is 0");
+									highlighCellCustom("result",3,2,"blue");
+									highlighCell("Left",1,1);
+									highlighCell("Left",1,3);
+									highlighCell("Left",2,1);
+									highlighCell("Left",2,3);
+
+									det8 = determinant2by2(parseFractions("#Left11"), parseFractions("#Left13"), parseFractions("#Left21"), parseFractions("#Left23") );
+									$("#solutionBox").append("<p>" + "Subdeterminant8 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left23") + " )" + " - ( " + parseFractions("#Left21") + " x " + parseFractions("#Left13") + " ) = " + det8 + "</p>");
+									$("#result32").val(det8);
+
+									function step9(){
+
+
+										unHighlightCell("result",3,2);
+										unHighlightCell("Left",1,1);
+										unHighlightCell("Left",1,3);
+										unHighlightCell("Left",2,1);
+										unHighlightCell("Left",2,3);
+
+										highlighCellCustom("result",3,3,"blue");
+										highlighCell("Left",1,1);
+										highlighCell("Left",1,2);
+										highlighCell("Left",2,1);
+										highlighCell("Left",2,2);
+
+										det9 = determinant2by2(parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left21"), parseFractions("#Left22") );
+										$("#solutionBox").append("<p>" + "Subdeterminant9 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left22") + " )" + " - ( " + parseFractions("#Left21") + " x " + parseFractions("#Left12") + " ) = " + det9 + "</p>");
+										$("#result33").val(det9);
+
+										function step10(){
+											unHighlightCell("result",3,3);
+											unHighlightCell("Left",1,1);
+											unHighlightCell("Left",1,2);
+											unHighlightCell("Left",2,1);
+											unHighlightCell("Left",2,2);
+
+											var res11 = parseFractions("#result11");
+											var res12 = parseFractions("#result12")*-1;
+											var res13 = parseFractions("#result13");
+											var res21 = parseFractions("#result21")*-1;
+											var res22 = parseFractions("#result22");
+											var res23 = parseFractions("#result23")*-1;
+											var res31 = parseFractions("#result31");
+											var res32 = parseFractions("#result32")*-1;
+											var res33 = parseFractions("#result33");
+											
+											$("#result11").val(res11);
+											$("#result12").val(res12);
+											$("#result13").val(res13);
+											$("#result21").val(res21);
+											$("#result22").val(res22);
+											$("#result23").val(res23);
+											$("#result31").val(res31);
+											$("#result32").val(res32);
+											$("#result33").val(res33);
+											$("#solutionBox").html("Do checkerboard negative");
+
+											function step11(){
+												clearInterval(id10);
+												takeResultTranspose();
+												$("#solutionBox").html("Take the transpose to get the adjugate");
+
+												function step12(){
+													var overallDet = determinant3by3();
+													var flippedDet = 1/overallDet;
+
+													var res11 = parseFractions("#result11") * flippedDet;
+													var res12 = parseFractions("#result12") * flippedDet;
+													var res13 = parseFractions("#result13") * flippedDet;
+													var res21 = parseFractions("#result21") * flippedDet;
+													var res22 = parseFractions("#result22") * flippedDet;
+													var res23 = parseFractions("#result23") * flippedDet;
+													var res31 = parseFractions("#result31") * flippedDet;
+													var res32 = parseFractions("#result32") * flippedDet;
+													var res33 = parseFractions("#result33") * flippedDet;
+
+													$("#result11").val(res11);
+													$("#result12").val(res12);
+													$("#result13").val(res13);
+													$("#result21").val(res21);
+													$("#result22").val(res22);
+													$("#result23").val(res23);
+													$("#result31").val(res31);
+													$("#result32").val(res32);
+													$("#result33").val(res33);
+
+													if(overallDet != 0){
+														$("#solutionBox").html("Multiply by 1 over the determinant meaning 1 / "+ overallDet);
+													}else{
+														$("#solutionBox").html("The determinant is zero so the inverse is undefined as the last step is to multiply the matrix by 1/determinant");
+													}
+													
+													clearInterval(id11);
+												}
+
+												clearInterval(id10);
+												var id11 =  setInterval(step12, 3000);
+											}
+											clearInterval(id9);
+											var id10 =  setInterval(step11, 3000);
+										}
+										clearInterval(id8);
+									
+										var id9 =  setInterval(step10, 3000);
+
+									}
+									clearInterval(id7);
+								
+									var id8 =  setInterval(step9, 3000);
+
+								}
+								clearInterval(id6);
+							
+								var id7 =  setInterval(step8, 3000);
+
+							}
+							clearInterval(id5);
+						
+							var id6 =  setInterval(step7, 3000);
+
+						}
+						
+						clearInterval(id4);
+					
+						var id5 =  setInterval(step6, 3000);
+
+					}
+					
+					clearInterval(id3);
+				
+					var id4 =  setInterval(step5, 3000);
+
+				}
+
+				clearInterval(id2);
+				
+				var id3 =  setInterval(step4, 3000);
+
+			}
+
+			
+
+			clearInterval(id);
+			var id2 =  setInterval(step3, 3000);
+
+
 		}
+		var id = setInterval(step2, 3000);
 
 	}
 	///////////////////////////////////////////////////////////////////animated functions
@@ -1206,7 +1554,8 @@ $(document).ready(function(){
 			animatedInverse2by2();
 		}
 		else if(state==8){
-			takeInverse3by3();
+			//takeInverse3by3();
+			animatedInverse3by3();
 		}
 		
 	
