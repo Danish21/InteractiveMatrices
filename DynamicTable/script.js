@@ -14,6 +14,7 @@ $(document).ready(function(){
 	$updateMatrices= $("#updateMatrices"); //create Table button
 
 	$calculateButton = $("#calculateButton");
+	$animatedSolutionButton = $("#animatedSolutionButton");
 
 	$dimensionInput = $(".dimensionInput");
 	$dimensionInput1 = $(".dimensionInput1");
@@ -208,7 +209,7 @@ $(document).ready(function(){
 	function reset(){ // get rid of all tables
 		
 		removeStyling();
-		
+		$("#solutionBox").html('<h1 id="animationText"></h1>');
 		 // if not multiply or determinant then replace readOnly
 		removeDimensionsReadOnly();
 		
@@ -632,7 +633,7 @@ $(document).ready(function(){
 
 	/////////////////////////////////////////////////////////////////////animated Math
 	function animatedTranspose(){
-		$("#solutionBox").html('<h1 id="animationText"></h1>');
+		$("#solutionBox").html('<h3 id="animationText">In the transpose matrix entry ij = extry ji</h3>');
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput1.val();
 		var row = 1; var collumn = 0;
@@ -653,7 +654,7 @@ $(document).ready(function(){
 				var matchValue = parseFractions("#Left"+collumn+row);
 				$("#result"+row+collumn).val(matchValue);
 			 	
-			 	
+			 	$("#solutionBox").html('<h3 id="animationText">In the transpose matrix entry ij = extry ji</h3><h5>For example entry in row ' + collumn +  ' and collumn ' + row +  ' in the original matrix will be in row ' + row + ' and collumn ' +collumn + ' in the transposed matrix</h5>');
 				
 				collumnPrev = collumn;
 				rowPrev = row;
@@ -862,7 +863,7 @@ $(document).ready(function(){
 
 	
 	function animatedDeterminant2by2(){
-		$("#solutionBox").html("");
+		$("#solutionBox").html('<h3 id="animationText"></h3>');
 		highlighCell("Left",1,1);
 		highlighCell("Left",2,2);
 		$("#animationText").html(" Determinant = ( a x d )-( b x c ) = ");
@@ -1137,7 +1138,7 @@ $(document).ready(function(){
 							highlighCell("Left",3,2);
 
 							det6 = determinant2by2(parseFractions("#Left11"), parseFractions("#Left12"), parseFractions("#Left31"), parseFractions("#Left32") );
-							$("#solutionBox").append("<p>" + "Subdeterminant3 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left32") + " )" + " - ( " + parseFractions("#Left31") + " x " + parseFractions("#Left12") + " ) = " + det6 + "</p>");
+							$("#solutionBox").append("<p>" + "Subdeterminant6 = (" + parseFractions("#Left11") + " x " + parseFractions("#Left32") + " )" + " - ( " + parseFractions("#Left31") + " x " + parseFractions("#Left12") + " ) = " + det6 + "</p>");
 							$("#result23").val(det6);
 
 							function step7(){
@@ -1329,7 +1330,7 @@ $(document).ready(function(){
 		state = 1; //we are adding 
 		
 		//set inputs to 3 by default
-		$addButton.css("border","solid black");
+		$addButton.css("border","solid white");
 		$rowInput1.val(2);
 		$collumnInput1.val(2);
 		$rowInput2.val(2);
@@ -1346,7 +1347,7 @@ $(document).ready(function(){
 		state = 2; //we are subtracting 
 		
 		//set inputs to 2 by default
-		$subtractButton.css("border","solid black");
+		$subtractButton.css("border","solid white");
 		$rowInput1.val(2);
 		$collumnInput1.val(2);
 		$rowInput2.val(2);
@@ -1363,7 +1364,7 @@ $(document).ready(function(){
 		state =3; //we are multiplying 
 		
 		//set inputs to 3 by default
-		$multiplyButton.css("border","solid black");
+		$multiplyButton.css("border","solid white");
 		$rowInput1.val(2);
 		$collumnInput1.val(2);
 		$rowInput2.val(2);
@@ -1382,7 +1383,6 @@ $(document).ready(function(){
 	});
 
 	$resetButton.click(function(){
-		removeBorder();
 		reset();
 
 	})
@@ -1392,7 +1392,7 @@ $(document).ready(function(){
 
 		reset(); //reset
 		state = 4; //now in transpose state
-		$transposeButton.css("border","solid black");
+		$transposeButton.css("border","solid white");
 
 		$rowInput1.val(2); //default val of 2
 		$collumnInput1.val(2);
@@ -1419,7 +1419,7 @@ $(document).ready(function(){
 		//create default matrices
 		addLeftMatrix();
 
-		$determinantButton2.css("border","solid black");
+		$determinantButton2.css("border","solid white");
 
 
 	});
@@ -1437,7 +1437,7 @@ $(document).ready(function(){
 		//create default matrices
 		addLeftMatrix();
 		
-		$determinantButton3.css("border","solid black");
+		$determinantButton3.css("border","solid white");
 
 
 	});
@@ -1458,7 +1458,7 @@ $(document).ready(function(){
 		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
 
 
-		$inverseButton2.css("border","solid black");
+		$inverseButton2.css("border","solid white");
 
 
 	});
@@ -1479,7 +1479,7 @@ $(document).ready(function(){
 		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
 
 
-		$inverseButton3.css("border","solid black");
+		$inverseButton3.css("border","solid white");
 
 
 	});
@@ -1524,6 +1524,45 @@ $(document).ready(function(){
 
 	$calculateButton.click(function(){
 		if(state == 1){
+			addMatrices();
+			// animatedAdd();
+		}
+		else if (state == 2) {
+			subtractMatrices();
+			// animatedSubtract();
+			
+		}
+		else if(state == 3){ 
+			multiplyMatrices();
+			// animatedMultiplyMatrices();
+
+		}
+		else if(state == 4){
+			takeTransposeLeft();
+			// animatedTranspose();
+		}
+		else if( state == 5){
+			takeDeterminant2by2();
+			// animatedDeterminant2by2();
+		} 
+		else if( state == 6){
+			takeDeterminant3by3();
+			// animatedDeterminant3by3();
+		}
+		else if(state==7){
+			take2by2Inverse();
+			// animatedInverse2by2();
+		}
+		else if(state==8){
+			takeInverse3by3();
+			// animatedInverse3by3();
+		}
+		
+	
+	});
+
+	$animatedSolutionButton.click(function(){
+		if(state == 1){
 			//addMatrices();
 			animatedAdd();
 		}
@@ -1560,6 +1599,7 @@ $(document).ready(function(){
 		
 	
 	});
+
 
 	////////////////////////////////////////////////Event control
 

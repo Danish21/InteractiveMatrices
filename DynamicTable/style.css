@@ -35,12 +35,25 @@ body{
 }
 .controll{
 
-	height: 50px;
+	height: 45px;
 	margin-top: 30px;
-	margin-left: 17%;
+	margin-left: 13%;
 	background-color: white;
 	color: black;
+	padding-top: 20px;
 }
+
+.moreTextControl{
+	height: 53px;
+	padding-top: 12px;
+}
+
+.controll:hover{
+	background-color: grey;
+	color: white;
+}
+
+
 
 
 #dimensionsBox{
@@ -120,7 +133,7 @@ body{
 #matrixBox{
 	/*margin-bottom: 50px;*/
 	/*border: solid black;*/
-	height: 200px;
+	height: 100px;
 }
 
 #xBox{
@@ -144,13 +157,15 @@ body{
 #solutionBox{
 
 	/*border: solid blue;
-*/	height: 150px;
-	width: 100%;
+*/	height: 300px;
+	width: 400px;
+	margin: 0 auto 0 auto;
 
 }
 
 #animationText{
 	margin: 0 auto 0 auto;
+	text-align: center;
 }
 input[type="text"] {
 
