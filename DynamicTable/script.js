@@ -10,15 +10,17 @@ $(document).ready(function(){
 	$determinantButton3 = $("#determinant3by3Button");
 	$inverseButton2 = $("#inverse2by2Button");
 	$inverseButton3 = $("#inverse3by3Button");
+	$rrefButton = $("#rowEchelonFormButton");
+
 	$resetButton =$("#resetButton");
 	$updateMatrices= $("#updateMatrices"); //create Table button
-
 	$calculateButton = $("#calculateButton");
 	$animatedSolutionButton = $("#animatedSolutionButton");
 
 	$dimensionInput = $(".dimensionInput");
 	$dimensionInput1 = $(".dimensionInput1");
 	$dimensionInput2 = $(".dimensionInput2");
+	$AxBButton =$("#AxBButton");
 
 
 	var state = 0;
@@ -31,6 +33,7 @@ $(document).ready(function(){
 	//6 for det3x3
 	//7 for 2x2 Inverse
 	//8 for 3x3 Inverse
+	//9 for rref
 
 
 	$tableLeft= ""; 
@@ -65,6 +68,8 @@ $(document).ready(function(){
 			$("#"+matrix+rowNumber+j).css("background-color","yellow");
 
 		}
+
+		
 
 	}
 
@@ -254,8 +259,8 @@ $(document).ready(function(){
 
 		$rowDim = $rowInput1.val();
 		$collumnDim = $collumnInput1.val();
-		console.log($rowDim);
-		console.log($collumnDim);
+		////console.log($rowDim);
+		////console.log($collumnDim);
 
 		$tableLeft += '<table id ="myTable1" class="matrix">';
 
@@ -283,14 +288,153 @@ $(document).ready(function(){
 		$tableLeft="";
 	}
 
+	function makeLeftAugmented(){
+
+
+		$("#myTable1").remove(); // empty current table because will create replacement
+
+		$rowDim = parseInt($rowInput1.val());
+		$collumnDim = parseInt($collumnInput1.val())+2;
+		////console.log($rowDim);
+		////console.log($collumnDim);
+
+		$tableLeft += '<table id ="myTable1" class="matrix">';
+
+		for(var i=1; i <= $rowDim; i++){ //starting at one so coordinates line up
+			
+			$tableLeft += "<tr>";
+			
+
+			for( var j=1; j<= $collumnDim; j++){
+				
+				if(j== ($collumnDim-1)  ){
+
+					$tableLeft += '<td> </td>';
+
+				}else{
+					$tableLeft += '<td> <input class="matrixEntry" id="Left' + i + j + '"type="text">';
+					$tableLeft += "</td>";
+				}
+			}
+
+
+			//for( var k=0; k< $collumnDim; k++){
+			//	$tableLeft += "</td>";
+			//}
+
+			$tableLeft += "</tr>";
+			
+
+		}
+
+		$tableLeft += "</table>";
+		$("#tableBox1").append($tableLeft);
+		$leftTableExists = true;
+		$tableLeft="";
+	}
+
+
+	function makeRightAugmented(){
+
+
+		$("#myTable2").remove(); // empty current table
+		// empty current table because will create replacement
+
+		$rowDim = parseInt($rowInput2.val());
+		$collumnDim = parseInt($collumnInput2.val())+2;
+		////console.log($rowDim);
+		////console.log($collumnDim);
+
+		$tableRight += '<table id ="myTable2" class="matrix">';
+
+		for(var i=1; i <= $rowDim; i++){ //starting at one so coordinates line up
+			
+			$tableRight += "<tr>";
+			
+
+			for( var j=1; j<= $collumnDim; j++){
+				
+				if(j== ($collumnDim-1)  ){
+
+					$tableRight += '<td> </td>';
+
+				}else{
+					$tableRight += '<td> <input class="matrixEntry" id="right'+ i + j +'" type="text" >';
+					$tableRight += "</td>";
+				}
+			}
+
+
+			//for( var k=0; k< $collumnDim; k++){
+			//	$tableRight += "</td>";
+			//}
+
+			$tableRight += "</tr>";
+			
+
+		}
+
+		$tableRight += "</table>";
+		$("#tableBox2").append($tableRight);
+		$rightTableExists = true;
+		$tableRight="";
+	}
+
+	function makeResultAugmented(){
+
+		$("#myTable3").remove(); // empty current table because will create replacement
+
+		$rowDim = parseInt($rowInput1.val());
+		$collumnDim = parseInt($collumnInput1.val())+2;
+		////console.log($rowDim);
+		////console.log($collumnDim);
+
+		$tableResults += '<table id ="myTable3" class="matrix">';
+
+		for(var i=1; i <= $rowDim; i++){ //starting at one so coordinates line up
+			
+			$tableResults += "<tr>";
+			
+
+			for( var j=1; j<= $collumnDim; j++){
+				
+				if(j== ($collumnDim-1)  ){
+
+					$tableResults += '<td> </td>';
+
+				}else{
+					$tableResults += '<td> <input class="matrixEntry" id="result' +i +j+ '" type="text" readonly>';
+					$tableResults += "</td>";
+				}
+			}
+
+
+			//for( var k=0; k< $collumnDim; k++){
+			//	$tableResults += "</td>";
+			//}
+
+			$tableResults += "</tr>";
+			
+
+		}
+
+		$tableResults += "</table>";
+		$("#resultsBox").append($tableResults);
+		$tableResultsExists =true;
+		$tableResults="";
+
+
+
+
+	}
 	function addRightMatrix(){
 
 		$("#myTable2").remove(); // empty current table
 
 		$rowDim = $rowInput2.val();
 		$collumnDim = $collumnInput2.val();
-		console.log($rowDim);
-		console.log($collumnDim);
+		////console.log($rowDim);
+		////console.log($collumnDim);
 
 		$tableRight += '<table id ="myTable2" class="matrix">';
 
@@ -355,6 +499,46 @@ $(document).ready(function(){
 
 	}
 
+	function copyLeftToResult(){
+
+		var collumnCount = $collumnInput1.val();
+		var rowCount = $rowInput1.val();
+
+		for(var i= 1; i <= rowCount; i++){
+
+			for(var j=1; j <=collumnCount; j++){
+
+				var temp1 = parseFractions("#Left"+i+j);
+				$("#result"+i+j).val(temp1);
+
+
+			}
+
+		}
+
+
+	}
+
+	function copyAugLeftToResult(){
+
+		var collumnCount = parseInt($collumnInput1.val());
+		var rowCount = parseInt($rowInput1.val());
+
+		for(var i= 1; i <= rowCount; i++){
+
+			for(var j=1; j <= (collumnCount+2); j++){
+				if(j==(collumnCount+1)){continue;}
+				var temp1 = parseFractions("#Left"+i+j);
+				$("#result"+i+j).val(temp1);
+
+
+			}
+
+		}
+
+
+	}
+
 	function createDefaultMatrices(){
 		addLeftMatrix();
 		addRightMatrix();
@@ -364,7 +548,7 @@ $(document).ready(function(){
 
 	/////////////////////////////////////////////////////////////////////////Styling Logic
 	function parseFractions(inputId){
-				
+				//console.log(inputId);
 				var inputString = $(inputId).val();
 				
 				var inputFrac = inputString.split("/");
@@ -377,13 +561,320 @@ $(document).ready(function(){
 					inputFrac[1]=parseFloat(inputFrac[1]);
 					output = inputFrac[0]/inputFrac[1];
 				} 
-
+				//console.log("ouput: "+ output);
 				return output;
 
 	}
 	/////////////////////////////////////////////////////////////////////////Math Logic
-	
+	function switchRows(r1, r2 ){
 
+		var collumnCount = $collumnInput1.val();
+
+		for(var i =1; i<=collumnCount; i++){
+
+			var temp1 = parseFractions("#result"+r1+i);
+			var temp2 = parseFractions("#result"+r2+i);
+
+			$("#result"+r1+i).val(temp2);
+			$("#result"+r2+i).val(temp1);
+
+		}
+
+	}
+	function rowEcheolonForm(){
+		////console.log("hello");
+		var rowCount = $rowInput1.val();
+		var rowCountPlusOne = parseInt(rowCount) +1;
+		var collumnCount = $collumnInput1.val();
+		var collumnCountPlusOne = parseInt(collumnCount) +1;
+		var lead = 1; //Pivot collumn
+
+		copyLeftToResult();
+		//1 2 3  -> 1 2 3 -> 1 2 3   ->  
+		//2 4 6		2 4 6 	 0 0 0
+		//7 8 9 	7 8 9    0 -6 -12
+
+
+		for(var r=1; r<=rowCount; r++){
+
+			if( (collumnCountPlusOne) <= lead){
+				return;
+			}
+
+
+			var i = r;  //The pivot is always to the right of the 
+			
+			//Find the first row with the first collumn with a non zero entry
+			////console.log(0);
+			while(parseFractions("#result"+i+lead) == 0){ 
+
+				i++; 
+				
+				////console.log("Outside and i: " + i +  " and r: "+r  + "and rowCount+1 = " );
+				////console.log(rowCountPlusOne);
+				if( (rowCountPlusOne) == i){ //if at the last row and everything in this collumn is zero then check the next collumn
+					////console.log("Inside and i: " + i +  " and r: "+r );
+					i=r; 
+					lead++; 
+					////console.log(lead)
+					if( (collumnCountPlusOne) == lead){
+						////console.log("result because full");
+						return;
+					}
+				}
+
+				
+				////console.log(0);
+			}
+			////console.log("switchingRows " + r + " " + i);
+			switchRows(i,r); //bring the row up and send the current row down
+			////console.log(1);
+			var val = parseFractions("#result"+r+lead); //Store the value of the pivot entry
+			////console.log("val: "+ val + " and r " + r +  " and lead: " + lead);
+
+			for(var j=1; j <= collumnCount; j++){ //Divide every entry in that collumn by val so the pivot entry is now one 
+												//and the pivot collumn now store the multiples to multiple each row by,
+												//which then subtracted from the cuur row will zero out everything below the pivot 
+				////console.log(2);
+				var temp1 = parseFractions("#result"+r+j) / val;
+
+				////console.log("temp1: "+temp1);
+				$("#result"+r+j).val(temp1);
+			}
+
+			for(var i =1; i <= rowCount; i++){ // Go through all the rows and subtract (each row * the multiple stored) from the curr row 
+				if(i==r){
+					continue; //Don't need to do anything to curr row
+				}
+				////console.log(3);
+				val = parseFractions("#result"+i+lead); //Take the value from the curr pivot collumn of the row 
+
+				for(var j =1; j <= collumnCount; j++){ 
+					////console.log(4);
+					var tempVal = parseFractions("#result"+i+j) - val*parseFractions("#result"+r+j);
+					////console.log("tempVal: "+tempVal);
+					$("#result"+i+j).val(tempVal);
+				}
+			}
+
+			lead ++;
+			//return;
+
+		}
+
+
+	}
+
+	function ifPivotCollumn(r,c){
+
+		var rowCount = parseInt($rowInput1.val());
+		
+		var collumnCount = parseInt( $collumnInput1.val() );
+		
+		var val = parseFractions("#result"+r+c);
+
+		for(var i=1; i<=rowCount; i++){
+
+			if(i==r){continue;}
+
+			if(parseFractions("#result"+i+c)!=0){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	function printAXBreduceSolutions(){
+
+		$("#solutionBox").html ("");
+		var rowCount = parseInt($rowInput1.val());
+		var collumnCount = parseInt( $collumnInput1.val() );
+
+		var freeVariablesList = [];
+		for(var i=1; i<=collumnCount; i++){
+			freeVariablesList[i]=false;
+		}
+
+		for(var r=1; r<=collumnCount; r++){
+			//console.log("r:"+r);
+			//console.log("In solution");
+
+			
+			var pivotCount = 0;
+			var pivotLoc = 0;
+
+			var freeVariables= [];
+			var freeVariablesLoc=[];
+			var amountOfFreeVariables = 0;
+			
+
+			for(var j=1; j<=collumnCount; j++ ){
+
+				var val = parseFractions("#result"+r+j);
+
+				if(val==1){
+					if(ifPivotCollumn(r, j)){
+						pivotLoc = j;
+						pivotCount++;
+					}else{
+						freeVariables[amountOfFreeVariables] = val;
+						freeVariablesLoc[amountOfFreeVariables] = j;
+						amountOfFreeVariables++;
+					}
+				}
+				else if(val!=0){
+					freeVariables[amountOfFreeVariables] = val;
+					freeVariablesLoc[amountOfFreeVariables] = j;
+					amountOfFreeVariables++;
+				}
+
+
+			}
+
+			if( (pivotCount>0) && (amountOfFreeVariables==0) ){
+				console.log(1);
+				//console.log("amountOfFreeVariables: " + amountOfFreeVariables)
+				$("#solutionBox").append("<p>"+ "x"+ pivotLoc + " = " + parseFractions("#result"+r+ (collumnCount+2) ) +"</p>"  );
+
+			}
+			else if( (pivotCount>0) && (amountOfFreeVariables>0) ){
+				console.log(1);
+				$("#solutionBox").append ('<p id="p' +r+ '">' + "x"+ pivotLoc + " = " + parseFractions("#result"+r+ (collumnCount+2)  )+"</p>" );
+				
+				for(var i=0; i< amountOfFreeVariables; i++){
+					if(freeVariables[i] > 0){
+						$("#p"+r).append(  " - " +freeVariables[i] + "x"+ freeVariablesLoc[i]);
+					}else{
+						$("#p"+r).append(  " + " + (freeVariables[i] *-1) + "x"+ freeVariablesLoc[i]);
+					}
+					//console.log(freeVariablesLoc)
+					if(freeVariablesList[freeVariablesLoc[i]]==false){
+						$("#solutionBox").append ('<p>' + "x"+ freeVariablesLoc[i] + " = " + "x"+ freeVariablesLoc[i] +"</p>" );
+						freeVariablesList[freeVariablesLoc] = true;
+					}
+				}
+
+			}
+
+			else if( (amountOfFreeVariables>0) ){
+				//console.log(3);
+				for(var i=0; i< amountOfFreeVariables; i++){
+
+					$("#solutionBox").append( "<p>" + "+ " +freeVariables[i] + "x"+ freeVariablesLoc[i] +"</p>" );
+
+				}
+
+			} else{
+				//console.log(4);
+				//$("#solutionBox").append("<p> Nothing Printed </p>" );
+			}
+
+
+
+		}
+
+
+
+	}
+
+	function AXBReduce(){
+		////console.log("hello");
+		var rowCount = parseInt($rowInput1.val());
+		var rowCountPlusOne = rowCount + 1;
+		var collumnCount = parseInt( $collumnInput1.val() );
+		var collumnCountPlusOne = collumnCount + 1;
+		var lead = 1; //Pivot collumn
+
+		copyAugLeftToResult();
+		//1 2 3  -> 1 2 3 -> 1 2 3   ->  
+		//2 4 6		2 4 6 	 0 0 0
+		//7 8 9 	7 8 9    0 -6 -12
+
+
+		for(var r=1; r<=rowCount; r++){
+
+			if( (collumnCountPlusOne) <= lead){
+				printAXBreduceSolutions();
+				return;
+			}
+
+
+			var i = r;  //The pivot is always to the right of the 
+			
+			//Find the first row with the first collumn with a non zero entry
+			////console.log(0);
+			while(parseFractions("#result"+i+lead) == 0){ 
+
+				i++; 
+				
+				////console.log("Outside and i: " + i +  " and r: "+r  + "and rowCount+1 = " );
+				////console.log(rowCountPlusOne);
+				if( (rowCountPlusOne) == i){ //if at the last row and everything in this collumn is zero then check the next collumn
+					////console.log("Inside and i: " + i +  " and r: "+r );
+					i=r; 
+					lead++; 
+					////console.log(lead)
+					if( (collumnCountPlusOne) == lead){
+						////console.log("result because full");
+						printAXBreduceSolutions();
+						return;
+					}
+				}
+
+				
+				////console.log(0);
+			}
+			////console.log("switchingRows " + r + " " + i);
+			switchRows(i,r); //bring the row up and send the current row down
+			////console.log(1);
+			var val = parseFractions("#result"+r+lead); //Store the value of the pivot entry
+			////console.log("val: "+ val + " and r " + r +  " and lead: " + lead);
+
+			for(var j=1; j <= collumnCount+2; j++){ //Divide every entry in that collumn by val so the pivot entry is now one 
+												//and the pivot collumn now store the multiples to multiple each row by,
+												//which then subtracted from the cuur row will zero out everything below the pivot 
+				////console.log(2);
+				if(j==collumnCountPlusOne){continue;}
+				var temp1 = parseFractions("#result"+r+j) / val;
+
+				//console.log("temp1: "+temp1);
+				$("#result"+r+j).val(temp1);
+			}
+
+			for(var i =1; i <= rowCount; i++){ // Go through all the rows and subtract (each row * the multiple stored) from the curr row 
+				if(i==r){
+					continue; //Don't need to do anything to curr row
+				}
+				////console.log(3);
+				val = parseFractions("#result"+i+lead); //Take the value from the curr pivot collumn of the row 
+
+				for(var j =1; j <= collumnCount+2; j++){ 
+					////console.log(4);
+					if(j == collumnCountPlusOne){continue;}
+
+					var tempVal = parseFractions("#result"+i+j) - val*parseFractions("#result"+r+j);
+					//console.log("tempVal: "+tempVal);
+					$("#result"+i+j).val(tempVal);
+				}
+
+
+
+			}
+
+			lead ++;
+			//return;
+
+		}
+
+		//If a row has just one pivot collumns then we know the value of that variable and no other non zero entries
+			//if a row has a pivot collumn, but other zero entries then we can solve for the pivot collumn in terms of the other varaibels
+			//if there are no pivot collumns then we can leave it as free variables each some value
+		
+		printAXBreduceSolutions();
+
+	}
 	function scalarMultiply(matrix,scalar,rowDim,collumnDim){
 
 		
@@ -452,10 +943,10 @@ $(document).ready(function(){
 		$collumnDim = $collumnInput2.val();
 		
 		// $resultVal = $("#result11").val();
-		// console.log($resultVal);
+		// ////console.log($resultVal);
 
 		// $("#result"+i+j).val(10);
-		//console.log("collumnInput1: " + $collumnInput1.val());
+		//////console.log("collumnInput1: " + $collumnInput1.val());
 		
 		for(var i=1; i<=$rowDim; i++){
 			
@@ -490,10 +981,10 @@ $(document).ready(function(){
 		$collumnDim = $rowInput1.val();
 		
 		// $resultVal = $("#result11").val();
-		// console.log($resultVal);
+		// ////console.log($resultVal);
 
 		// $("#result"+i+j).val(10);
-		//console.log("collumnInput1: " + $collumnInput1.val());
+		//////console.log("collumnInput1: " + $collumnInput1.val());
 		
 		for(var i=1; i<=$rowDim; i++){
 
@@ -511,10 +1002,10 @@ $(document).ready(function(){
 		$collumnDim = $rowInput1.val();
 		
 		// $resultVal = $("#result11").val();
-		// console.log($resultVal);
+		// ////console.log($resultVal);
 
 		// $("#result"+i+j).val(10);
-		//console.log("collumnInput1: " + $collumnInput1.val());
+		//////console.log("collumnInput1: " + $collumnInput1.val());
 		
 		
 				//row i of left times collumn j of right
@@ -1319,6 +1810,8 @@ $(document).ready(function(){
 		var id = setInterval(step2, 3000);
 
 	}
+
+
 	///////////////////////////////////////////////////////////////////animated functions
 
 
@@ -1338,6 +1831,7 @@ $(document).ready(function(){
 		
 		//create default matrices
 		createDefaultMatrices();
+		
 		
 	});
 
@@ -1484,6 +1978,47 @@ $(document).ready(function(){
 
 	});
 
+	$rrefButton.click(function(){
+
+		reset();
+		state=9;
+
+		$rowInput1.val(3);
+		$collumnInput1.val(3);
+		
+
+		
+		//create default matrices
+		addLeftMatrix();
+		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
+
+
+		$rrefButton.css("border","solid white");
+
+
+	});
+
+	$AxBButton.click(function(){
+
+		reset();
+		state=10;
+
+		$rowInput1.val(3);
+		$collumnInput1.val(3);
+		
+
+		
+		//create default matrices
+		addLeftMatrix();
+		makeLeftAugmented();
+		addResultsMatrix($collumnInput1.val(),$rowInput1.val());
+		makeResultAugmented();
+
+		$AxBButton.css("border","solid white");
+
+
+	});
+
 
 
 	$updateMatrices.click(function(){
@@ -1556,6 +2091,10 @@ $(document).ready(function(){
 		else if(state==8){
 			takeInverse3by3();
 			// animatedInverse3by3();
+		}else if(state==9){
+			rowEcheolonForm();
+		}else if(state==10){
+			AXBReduce();
 		}
 		
 	
@@ -1565,6 +2104,7 @@ $(document).ready(function(){
 		if(state == 1){
 			//addMatrices();
 			animatedAdd();
+			//rowEcheolonForm();
 		}
 		else if (state == 2) {
 			//subtractMatrices();
@@ -1595,6 +2135,10 @@ $(document).ready(function(){
 		else if(state==8){
 			//takeInverse3by3();
 			animatedInverse3by3();
+		}else if(state==9){
+			rowEcheolonForm();
+		}else if(state==10){
+			AXBReduce();
 		}
 		
 	

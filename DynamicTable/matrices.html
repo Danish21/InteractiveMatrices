@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript" src= "jquery-1.11.1.min.js"></script> 	
+		<script type="text/javascript" src="script.js"></script>
+		<link  rel="stylesheet" href="http://cdn.foundation5.zurb.com/foundation.css">
+		<script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
+	</head>
+
+
+
+	<body>
+		
+		
+		<div id="intialQuestionBox"><h1 id="question">Interactive Matrices</h1> </div>
+		<div class="row">
+			<div class="small-12 columns text-center">
+				<ul class="button-group">
+				  <li><a href="#" class="button tiny" id="addButton">Add</a></li>
+				  <li><a href="#" class="button tiny" id="subtractButton">Subtact</a></li>
+				  <li><a href="#" class="button tiny" id="multiplyButton">Multiply</a></li>
+				  <li><a href="#" class="button tiny" id="transposeButton">Transpose</a></li>
+				  <li><a href="#" class="button tiny" id="determinant2by2Button">Determinant 2x2</a></li>
+				  <li><a href="#" class="button tiny" id="inverse2by2Button" >Inverse 2x2</a></li>
+				  <li><a href="#" class="button tiny" id="determinant3by3Button">Determinant 3x3</a></li>
+				  <li><a href="#" class="button tiny" id="inverse3by3Button">Inverse 3x3</a></li>
+				  <li><a href="#" class="button tiny" id="rowEchelonFormButton">Find RREF</a></li>
+				  <li><a href="#" class="button tiny" id="AxBButton">AX=B</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="small-12 columns text-center">
+				<ul class="button-group">
+				  <li><a href="#" class="button tiny" id="updateMatrices">Resize Matrices</a></li>
+				  <li><a href="#" class="button tiny" id="resetButton">Reset</a></li>
+				  <li><a href="#" class="button tiny" id="calculateButton">Calculate</a></li>
+				  <li><a href="#" class="button tiny" id="animatedSolutionButton">Animated Solution</a></li>
+				</ul>
+			</div>
+		</div>
+
+	
+		<div class="row">
+			<form>
+				<div class="small-3 columns dimensionInput dimensionInput1">
+					 <label>Row Dimension 1
+					 <input id="rowInput1"   type="number" name="quantity" min="1" max="10">
+				</div>
+
+				<div class="small-3 columns dimensionInput dimensionInput1">
+					 <label>Column Dimension 1
+					 <input id="collumnInput1"  type="number" name="quantity" min="1" max="10">
+				</div>
+
+				<div class="small-3 columns dimensionInput  dimensionInput2">
+					 <label>Row Dimension 1
+					 <input id="rowInput2"   type="number" name="quantity" min="1" max="10">
+				</div>
+
+				<div class="small-3 columns dimensionInput  dimensionInput2">
+					 <label>Column Dimension 2
+					 <input id="collumnInput2"  type="number" name="quantity" min="1" max="10">
+				</div>
+			</form>
+
+		</div>
+
+
+
+	<div  class= "row" id="matrixBox">
+			<div class= "small-12 columns"> 
+				
+				<div class="row">
+					
+					<div class="small-6 columns text-center">
+							<h4>Left Matrix</h4>
+							<div id="tableBox1" class="tableBox small-12 columns"></div>
+					</div>
+					
+
+					<div class="small-6 columns text-center">
+							<h4>Right Matrix</h4>
+							<div id="tableBox2" class="tableBox small-12columns"></div>
+					</div>
+
+					
+				</div>
+
+				<div class="row">
+					<div class="small-12 columns text-center">
+							<h4>Results Matrix</h4>
+							<div id= "resultsBox" class="tableBox small-6 small-centered columns"> </div>
+					</div>
+
+				</div>
+
+			</div>
+	</div>
+
+		
+		<div class="row" >
+			
+			<div class="small-6 small-centered columns text-center" id="solutionBox">
+				<h1 id="animationText"></h1>
+			</div>
+
+		</div>
+
+
+	</body>
+
+
+
+
+
+
+
+
+
+</html>
